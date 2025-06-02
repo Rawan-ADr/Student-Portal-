@@ -21,7 +21,7 @@ class FieldRepository implements FieldRepositoryInterface
 
     public function loadRelations(Field $field): Field
     {
-        return $field->load(['validation', 'type']);
+        return $field->load(['validation', 'fieldType']);
     }
 
     public function findByNameAndType(string $name, int $typeId): ?Field

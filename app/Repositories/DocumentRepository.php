@@ -13,8 +13,8 @@ class DocumentRepository implements DocumentRepositoryInterface
             'content' => $data['content'],
         ]);
 
-        $document->field()->syncWithoutDetaching($data['field_ids']);
-        $document->attachment()->syncWithoutDetaching($data['attachment_ids']);
+        $document->fields()->syncWithoutDetaching($data['field_ids']);
+        $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
         $document->condition()->syncWithoutDetaching($data['condition_ids']);
         return $document->name;
     }
@@ -34,8 +34,8 @@ class DocumentRepository implements DocumentRepositoryInterface
                  'content' => $data['content'],
 
             ]);
-            $document->field()->syncWithoutDetaching($data['field_ids']);
-            $document->attachment()->syncWithoutDetaching($data['attachment_ids']);
+            $document->fields()->syncWithoutDetaching($data['field_ids']);
+            $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
             $document->condition()->syncWithoutDetaching($data['condition_ids']);
         return $document->name;
         }
