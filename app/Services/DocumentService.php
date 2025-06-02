@@ -272,6 +272,8 @@ class DocumentService
          return ["condition"=>null,"message"=>"you can not index conditions"];
     }
 
+
+    
      public function ShowAllDocuments(){
 
 

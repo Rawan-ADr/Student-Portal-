@@ -9,6 +9,7 @@ interface DocumentRepositoryInterface
     public function update(array $data,$id);
     public function delete($id);
     public function all();
+    public function findall($id);
     
     
 

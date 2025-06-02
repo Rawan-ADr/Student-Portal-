@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Responses\Response;
 use App\Services\StudentService;
+use App\Http\Requests\StudentRequest;
 
 class StudentController extends Controller
 {
@@ -15,13 +16,13 @@ class StudentController extends Controller
     }
 
 
-    public function login(Request $request)
+    public function login(StudentRequest $request)
     {
 
         $data=[];
      try{
-         $data=$this->studentService->login($request);
-         return Response::Success($data['token'],$data['message'],$data['code']) ;
+         $data=$this->studentService->login($request->validated());
+         return Response::Success($data['student'],$data['message'],$data['code']) ;
      }
 
      catch (Throwable $th){
@@ -30,6 +31,22 @@ class StudentController extends Controller
 
      }
 
+
+    }
+
+    public function logout(){
+
+        $data=[];
+       try{
+         $data=$this->studentService->logout();
+         return Response::Success($data['student'],$data['message'],$data['code']) ;
+        }
+
+      catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+        }
     }
 
     public function getStudent($id)
@@ -75,6 +92,23 @@ class StudentController extends Controller
      try{
          $data=$this->studentService->getRequest($id);
          return Response::Success($data['requests'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function getDocument($id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getDocument($id);
+         return Response::Success($data['document'],$data['message'],$data['code']) ;
      }
 
      catch (Throwable $th){

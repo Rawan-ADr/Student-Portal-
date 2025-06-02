@@ -14,7 +14,7 @@ class FieldType extends Model
       
     ];
 
-    public function field()
+    public function fields()
     {
         return $this->hasMany(Field::class,'field_types');
     }

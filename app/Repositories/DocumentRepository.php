@@ -55,9 +55,22 @@ class DocumentRepository implements DocumentRepositoryInterface
 
     public function all(){
         $document= Document::all();
-        return $document->name;
+        return $document;
 
 
+    }
+
+    public function findall($id)
+    {
+        return Document::with(['fields' => function ($query) {
+            $query->select('fields.id', 'fields.name', 'fields.field_type_id') 
+                ->with([
+                    'fieldType:id,type', 
+                    'validation:id,validation_rule'
+                ]);
+        }, 'attachments:id,name,description'])
+        ->select('documents.id', 'documents.name') 
+        ->find($id)->makeHidden(['fields.*.pivot', 'attachments.*.pivot']);;
     }
 
     

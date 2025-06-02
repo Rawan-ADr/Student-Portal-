@@ -23,14 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login',[UserController::class,'login']);
 Route::post('Login',[StudentController::class,'login']);
-Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
-//noooo
-Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
-Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
-Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('logout', [UserController::class, 'logout']);
+    Route::get('logout', [StudentController::class, 'logout']);
 
 Route::prefix('document')->group(function () {
     Route::post('create',[DocumentController::class,'create']);
@@ -54,7 +50,11 @@ Route::prefix('document')->group(function () {
 });
 
 Route::prefix('student')->group(function () {
+    Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
     Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
+    Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
+    Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
+    Route::get('getDocument/{id}',[StudentController::class,'getDocument']);
     
 
 

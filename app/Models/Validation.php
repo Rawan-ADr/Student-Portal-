@@ -16,7 +16,7 @@ class Validation extends Model
       
     ];
 
-    public function field()
+    public function fields()
     {
         return $this->belongsToMany(Field::class,'field__validations');
     }

@@ -25,8 +25,8 @@ class Field extends Model
         return $this->belongsToMany(Validation::class,'field__validations');
     }
 
-    public function type()
+    public function fieldType()
     {
-        return $this->belongsTo(FieldType::class,'field_types');
+        return $this->belongsTo(FieldType::class);
     }
 }

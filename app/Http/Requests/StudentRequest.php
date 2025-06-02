@@ -22,7 +22,7 @@ class StudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-        ];
+            'national_number' => 'required|digits:11',
+         ];
     }
 }

@@ -15,7 +15,7 @@ class Document extends Model
       
     ];
 
-    public function attachment()
+    public function attachments()
     {
         return $this->belongsToMany(Attachment::class,'document__attachments');
     } 
@@ -25,7 +25,7 @@ class Document extends Model
         return $this->belongsToMany(Condition::class,'document__conditions');
     }
 
-    public function field()
+    public function fields()
     {
         return $this->belongsToMany(Field::class,'document__fields');
     }
