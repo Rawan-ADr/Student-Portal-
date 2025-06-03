@@ -202,25 +202,6 @@ class DocumentService
            ];
         }
 
-     public function attachFieldsToDocument(int $documentId, array $fieldIds): array
-     {
-        if (!Auth::user()->hasRole('admin')) {
-            return ['document'=>null,'message' => 'you cant add field'];
-            }
-
-       $document = $this->documentRepository->find($documentId);
-
-        if (!$document) {
-            return ['document'=>null,'message' => 'document not found'];
-        }
-
-         $document->field()->syncWithoutDetaching($fieldIds);
-
-        return [
-          'message' => 'Fields attached to document successfully',
-          'document' => $document->load('field')
-        ];
-    }
 
     public function indexField(){
 
@@ -228,12 +209,27 @@ class DocumentService
 
             $field = $this->fieldRepository->all();
             if (is_null($field)) {
-                return ["field" => null, "message" => " not found any type."];
+                return ["field" => null, "message" => " not found any field."];
             }
             else{
-                return ["field" => $field, "message" => " types indexed successfully."];
+                return ["field" => $field, "message" => " fields indexed successfully."];
             }
         }
+    }
+
+    public function indexFieldById($field_id){
+
+        if ( Auth::user()->hasRole('admin')) {
+
+            $field = $this->fieldRepository->findById($field_id);
+            if (is_null($field)) {
+                return ["field" => null, "message" => " not found field."];
+            }
+            else{
+                return ["field" => $field, "message" => " field indexed successfully."];
+            }
+        }
+
     }
 
     public function createAttachment($request){
@@ -258,6 +254,40 @@ class DocumentService
             return ["attachment"=>$attachment,"message"=>$message];
         }
          return ["attachment"=>null,"message"=>"you can not index attachment"];
+    }
+
+    public function updateAttachment($request,$attachment_id){
+
+        if (!Auth::user()->hasRole('admin')) {
+            return ['attachment'=>null,'message' => 'you cant update attachment'];
+            }
+
+            $attachment = $this->attachmentRepository->find($attachment_id);
+           if (!$attachment) {
+            return ['attachment'=>null,'message' => 'attachment not found'];
+           }
+
+           $updatedAttachment = $this->attachmentRepository->update($request,$attachment_id);
+            return ['attachment'=>$updatedAttachment,'message' => 'attachment updated successsfully'];
+
+    }
+
+    public function deleteAttachment($attachment_id){
+
+        if (!Auth::user()->hasRole('admin')) {
+            return ['attachment'=>null,'message' => 'you cant delete attachment'];
+          }
+
+          $attachment = $this->attachmentRepository->find($attachment_id);
+
+          if (!$attachment) {
+            return ['attachment'=>null,'message' => 'attachment not found'];
+          }
+
+          $this->attachmentRepository->delete($attachment_id);
+
+         return ['attachment'=>null,'message' => 'attachment deleted successfully'];
+
     }
 
     public function indexCondition(){
@@ -288,6 +318,19 @@ class DocumentService
 
 
         
+    }
+
+    public function indexDocument($document_id){
+
+        $document=$this->documentRepository->find($document_id);
+        if (is_null($document)) {
+            
+            return ["document" => null, "message" => " no document."];
+        }
+        else{
+            return ["document" => $document, "message" => " document indexed successfully."];
+        }
+
     }
     }
     

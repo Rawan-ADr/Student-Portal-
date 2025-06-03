@@ -167,6 +167,21 @@ class DocumentController extends Controller
 
     }
 
+    public function indexFieldById($field_id){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->indexFieldById($field_id);
+           return Response::Success($data['field'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
     public function createAttachment(AttachmentRequest $request){
           $data=[];
         try{
@@ -201,6 +216,37 @@ class DocumentController extends Controller
 
     }
 
+    public function updateAttachment(AttachmentRequest $request,$attachment_id){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->updateAttachment($request->validated(),$attachment_id);
+           return Response::Success($data['attachment'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
+    public function deleteAttachment($attachment_id){
+
+        $data=[];
+        try{
+    
+           $data=$this->documentService->deleteAttachment($attachment_id);
+           return Response::Success($data['attachment'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
     public function indexCondition(){
 
         $data=[];
@@ -232,5 +278,22 @@ class DocumentController extends Controller
             return Response::Error($data,$message);
 
         }
-}
+    }
+
+    public function indexDocument($document_id){
+
+        $data=[];
+        try{
+    
+           $data=$this->documentService->indexDocument($document_id);
+           return Response::Success($data['document'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+
+    }
 }

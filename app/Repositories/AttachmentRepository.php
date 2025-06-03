@@ -19,14 +19,23 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     public function update(array $data, $id)
     {
+        $attachment = Attachment::find($id);
+        $attachment->update([
+           'name' => $data['name'],
+           'description' => $data['description'],
+           'type' => $data['type'],
+        ]);
+
+        return $attachment;
+      }   
         
-    }
+    
 
     public function delete($id)
     {
-        $document = Document::find($id);
-        if ($document) {
-            $document->delete();
+        $attachment = Attachment::find($id);
+        if ($attachment) {
+            $attachment->delete();
             return true;
         }
         return false;

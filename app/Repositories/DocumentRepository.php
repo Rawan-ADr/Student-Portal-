@@ -22,7 +22,8 @@ class DocumentRepository implements DocumentRepositoryInterface
 
     public function find($id)
     {
-        return Document::find($id);
+        $document= Document::find($id);
+        return $document->name;
     }
 
     public function update(array $data, $id)
@@ -54,7 +55,7 @@ class DocumentRepository implements DocumentRepositoryInterface
 
 
     public function all(){
-        $document= Document::all();
+        $document= Document::all()->select('name');
         return $document;
 
 
@@ -72,6 +73,8 @@ class DocumentRepository implements DocumentRepositoryInterface
         ->select('documents.id', 'documents.name') 
         ->find($id)->makeHidden(['fields.*.pivot', 'attachments.*.pivot']);;
     }
+
+    
 
     
 

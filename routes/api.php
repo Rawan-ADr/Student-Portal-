@@ -24,6 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login',[UserController::class,'login']);
 Route::post('Login',[StudentController::class,'login']);
 
+//noooo
+Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
+Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
+Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
+
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('logout', [UserController::class, 'logout']);
     Route::get('logout', [StudentController::class, 'logout']);
@@ -41,9 +46,14 @@ Route::prefix('document')->group(function () {
    Route::get('delete/field/{field_id}',[DocumentController::class,'deleteField']);
    Route::post('update/field/{field_id}',[DocumentController::class,'updateField']);
    Route::get('index/field',[DocumentController::class,'indexField']);
+   Route::get('index/fieldById/{field_id}',[DocumentController::class,'indexFieldById']);
    Route::post('create/attachment',[DocumentController::class,'createAttachment']);
    Route::get('index/attachment',[DocumentController::class,'indexAttachment']);
+   Route::post('update/attachment/{attachment_id}',[DocumentController::class,'updateAttachment']);
+   Route::get('delete/attachment/{attachment_id}',[DocumentController::class,'deleteAttachment']);
    Route::get('index/condition',[DocumentController::class,'indexCondition']);
+   Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
+   Route::get('index/document/{document_id}',[DocumentController::class,'indexDocument']);
    // Route::get('index',[GroupController::class,'index'])
    // ->middleware('can:group.index');
 
