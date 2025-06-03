@@ -41,12 +41,12 @@ class DocumentService
      public function create(array $data){
        
         if ( Auth::user()->hasRole('admin')) {
-        $document= $this->documentRepository->create($data);
+        return $this->documentRepository->create($data);}
     
-         $message="document created successfully ";
+         $message="you can not create document ";
     
-            return ["document"=>$document,"message"=>$message];
-        }}
+            return ["document"=>null,"message"=>$message];
+        }
 
         public function update($request,$document_id){
 

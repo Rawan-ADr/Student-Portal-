@@ -8,15 +8,29 @@ class DocumentRepository implements DocumentRepositoryInterface
 
     public function create(array $data)
     {
-          $document = Document::create([
-            'name' => $data['name'],
-            'content' => $data['content'],
-        ]);
+          $existing = Document::where('name', trim($data['name']))->first();
 
-        $document->fields()->syncWithoutDetaching($data['field_ids']);
-        $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
-        $document->condition()->syncWithoutDetaching($data['condition_ids']);
-        return $document->name;
+    if ($existing) {
+        return [
+            'document' => $existing->name,
+            'message' => 'Document already exists',
+        ];
+    }
+
+   
+    $document = Document::create([
+        'name' => $data['name'],
+        'content' => $data['content'],
+    ]);
+
+    $document->fields()->syncWithoutDetaching($data['field_ids']);
+    $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
+    $document->condition()->syncWithoutDetaching($data['condition_ids']);
+
+    return [
+        'document' => $document->name,
+        'message' => 'Document created successfully',
+    ];
     }
 
 
