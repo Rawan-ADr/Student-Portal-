@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class AttchmentValue extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+       'value',
+        'attachment_id',
+        'request_id'
+      
+    ];
+
+
+   
+
 }

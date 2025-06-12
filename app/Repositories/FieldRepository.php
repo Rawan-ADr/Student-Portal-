@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Models\Field;
+use App\Models\FieldValue;
 
 class FieldRepository implements FieldRepositoryInterface
 {
@@ -59,5 +60,22 @@ class FieldRepository implements FieldRepositoryInterface
     public function all()
     {
         return Field::all();
+    }
+
+
+    public function addFieldValue($request,$Request){
+        if ($request->has('fields')) {
+            foreach ($request->input('fields') as $fieldId => $value) {
+                FieldValue::create([
+                    'request_id' => $Request->id,
+                    'field_id' => $fieldId,
+                    'value' => $value,
+                ]);
+            }
+        }
+
+        return "done";
+
+
     }
 }

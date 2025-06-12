@@ -85,7 +85,7 @@ class DocumentRepository implements DocumentRepositoryInterface
                 ]);
         }, 'attachments:id,name,description'])
         ->select('documents.id', 'documents.name') 
-        ->find($id)->makeHidden(['fields.*.pivot', 'attachments.*.pivot']);;
+        ->find($id)->makeHidden(['fields.*.pivot', 'attachments.*.pivot']);
     }
 
     

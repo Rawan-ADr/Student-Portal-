@@ -29,4 +29,9 @@ class Field extends Model
     {
         return $this->belongsTo(FieldType::class);
     }
+
+    public function Request()
+    {
+        return $this->belongsToMany(Request::class,'field_values');
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Responses\Response;
 use App\Services\StudentService;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\RequestRequest;
 
 class StudentController extends Controller
 {
@@ -109,6 +110,110 @@ class StudentController extends Controller
      try{
          $data=$this->studentService->getDocument($id);
          return Response::Success($data['document'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function sendRequest(RequestRequest $request,$document_id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->sendRequest($request,$document_id);
+         return Response::Success($data['request'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function getLecture(Request $request)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getLecture($request);
+         return Response::Success($data['lectures'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+
+    public function getCourse(Request $request)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getCourse($request);
+         return Response::Success($data['courses'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+
+    public function getSemester()
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getSemester();
+         return Response::Success($data['semester'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function getYears()
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getYears();
+         return Response::Success($data['Years'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function addLecture(Request $request)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->addLecture($request);
+         return Response::Success($data['lecture'],$data['message'],$data['code']) ;
      }
 
      catch (Throwable $th){

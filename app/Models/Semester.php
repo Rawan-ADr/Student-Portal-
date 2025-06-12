@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Year extends Model
+class Semester extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'name'
       
@@ -19,4 +18,6 @@ class Year extends Model
     {
         return $this->hasMany(Course::class,'courses');
     }
+
+
 }

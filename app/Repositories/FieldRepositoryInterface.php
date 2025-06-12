@@ -23,6 +23,8 @@ use App\Models\Field;
     public function syncValidations(Field $field, array $validationIds): void;
 
     public function all();
+
+    public function addFieldValue($request,$Request);
 }
     
 

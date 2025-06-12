@@ -11,12 +11,18 @@ class Attachment extends Model
     protected $fillable = [
         'name',
         'description',
-        'type'
+        'type',
+        'id'
       
     ];
 
     public function document()
     {
         return $this->belongsToMany(Document::class,'document__attachments');
+    }
+
+     public function Request()
+    {
+        return $this->belongsToMany(Request::class,'attchment_values');
     }
 }

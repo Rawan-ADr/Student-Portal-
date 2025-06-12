@@ -10,6 +10,7 @@ class Request extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'date',
         'status',
         'point',
@@ -17,4 +18,14 @@ class Request extends Model
         'document_id'
       
     ];
+
+    public function attachments()
+    {
+        return $this->belongsToMany(Validation::class,'attchment_values');
+    }
+
+    public function fields()
+    {
+        return $this->belongsToMany(Validation::class,'field_values');
+    }
 }

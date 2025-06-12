@@ -1,6 +1,8 @@
 <?php
 namespace App\Repositories;
 use App\Models\Attachment;
+use App\Models\AttchmentValue;
+use Illuminate\Support\Facades\Storage;
 
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -44,6 +46,25 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      public function all()
     {
         return Attachment::all();
+    }
+
+
+    public function addAttachmentValue($request,$Request){
+        if ($request->has('attachments')) {
+            foreach ($request->attachments as $attachment_id => $file) {
+
+                $path = $file->store('attachments', 'public');
+                AttchmentValue::create([
+                    'request_id' => $Request->id,
+                    'attachment_id' => $attachment_id,
+                    'value' => $path,
+                ]);
+            }
+        }
+
+        return "done";
+
+
     }
 
     
