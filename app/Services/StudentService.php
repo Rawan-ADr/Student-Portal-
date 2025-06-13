@@ -12,6 +12,8 @@ use App\Repositories\DocumentRepositoryInterface;
 use App\Repositories\FieldRepositoryInterface;
 use App\Repositories\AttachmentRepositoryInterface;                     
 use App\Repositories\LectureRepositoryInterface;
+use App\Repositories\ScheduleRepositoryInterface;
+use App\Http\Resources\ScheduleResource;
                      
 
 class StudentService{
@@ -21,6 +23,7 @@ class StudentService{
     private  $fieldRepository;
     private  $attachmentRepository;
     private  $lectureRepository;
+    private  $scheduleRepository;
     
 
     public function __construct(StudentRepositoryInterface $studentRepository,
@@ -28,7 +31,8 @@ class StudentService{
                                  DocumentRepositoryInterface $documentRepository,
                                  FieldRepositoryInterface $fieldRepository,
                                  AttachmentRepositoryInterface $attachmentRepository,
-                                 LectureRepositoryInterface $lectureRepository)
+                                 LectureRepositoryInterface $lectureRepository,
+                                 ScheduleRepositoryInterface $scheduleRepository)
     {
         $this->requestRepository=$requestRepository;
        $this->studentRepository = $studentRepository;
@@ -36,6 +40,7 @@ class StudentService{
        $this->fieldRepository = $fieldRepository;
        $this->attachmentRepository = $attachmentRepository;
        $this->lectureRepository = $lectureRepository;
+       $this->scheduleRepository = $scheduleRepository;
     }
 
     public function login($request){
@@ -258,6 +263,145 @@ class StudentService{
         $code=200; 
 
         return ['lecture'=>$lecture,'message'=>$message,'code'=>$code];
+    }
+
+
+    public function addAnnouncement($request){
+        $Announcement =$this->lectureRepository->addAnnouncement($request);
+        if(!$Announcement){
+            $Announcement=null;
+            $message="error...";
+            $code=404;
+        }
+        $message="Announcement add successfully";
+        $code=200; 
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+    }
+
+
+    
+    public function getAnnouncement()
+    {
+        $Announcement=$this->lectureRepository->getAnnouncement();
+        if(!$Announcement->isEmpty()){
+            $message="This is all Announcement";
+            $code=200;   
+        }
+
+        else {
+            $Announcement=null;
+            $message="not found";
+            $code=404;
+        }
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+
+
+
+    }
+
+    public function addStudent($request){
+        $student=$this->studentRepository->createStudent($request);
+        if(!$student){
+            $student=null;
+            $message="error...";
+            $code=404;
+        }
+        $message="student add successfully";
+        $code=200; 
+
+        return ['student'=>$student,'message'=>$message,'code'=>$code];
+
+    }
+
+    public function addStudentRecord($request){
+        $studentRecord=$this->studentRepository->createStudentRecord($request);
+        if(!$studentRecord){
+            $studentRecord=null;
+            $message="error...";
+            $code=404;
+        }
+        else{
+        $message="studentRecord add successfully";
+        $code=200; }
+
+        return ['studentRecord'=>$studentRecord,'message'=>$message,'code'=>$code];
+
+    }
+
+
+    public function addNotes($request,$id){
+
+        $request->validate([
+            'notes' => 'required|string|max:1000',
+        ]);
+
+        $studentRecord=$this->studentRepository->addNotes($request,$id);
+        
+        if(is_null($studentRecord))
+        {
+            $studentRecord=null;
+            $message="record not found";
+            $code=404;
+        }
+
+        else{
+        $message="Notes add successfully";
+        $code=200; 
+        }
+
+        return ['studentRecord'=>$studentRecord,'message'=>$message,'code'=>$code];
+
+    }
+
+    public function addSchedule($request){
+        $Schedule=$this->scheduleRepository->add($request);
+        if(!$Schedule){
+            $Schedule=null;
+            $message="error...";
+            $code=404;
+        }
+        $message="Lecture Time add successfully";
+        $code=200; 
+
+        return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
+
+    }
+
+    
+    public function getSchedule($request){
+        $request->validate([
+            'year_id' => 'required|exists:years,id',
+            'semester_id' => 'required|exists:semesters,id',
+        ]);
+        $schedule=$this->scheduleRepository->get($request);
+        if(!$schedule){
+            $Schedule=null;
+            $message="error...";
+            $code=404;
+        }
+        else{
+           $Schedule=$schedule->map(function ($lectures, $dayName) {
+            return [
+                'day' => $dayName,
+                'lectures' => $lectures->map(function ($lecture) {
+                    return [
+                        'course_name' => $lecture->course->name,
+                        'start_time' => $lecture->start_time,
+                        'end_time' => $lecture->end_time,
+                        'type' => $lecture->type,
+                    ];
+                })->values()
+            ];
+        })->values();
+
+        $message="Schedule get successfully";
+        $code=200;
+        } 
+
+        return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
+
     }
    
 }

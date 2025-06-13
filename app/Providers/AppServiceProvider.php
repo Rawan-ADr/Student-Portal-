@@ -23,6 +23,8 @@ use App\Repositories\ConditionRepositoryInterface;
 use App\Repositories\ConditionRepository;
 use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\LectureRepository;
+use App\Repositories\ScheduleRepositoryInterface;
+use App\Repositories\ScheduleRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);
         $this->app->bind(ConditionRepositoryInterface::class, ConditionRepository::class);
         $this->app->bind(LectureRepositoryInterface::class, LectureRepository::class);
+        $this->app->bind(ScheduleRepositoryInterface::class, ScheduleRepository::class);
     }
 
     /**

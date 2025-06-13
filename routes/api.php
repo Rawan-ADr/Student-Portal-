@@ -24,10 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login',[UserController::class,'login']);
 Route::post('Login',[StudentController::class,'login']);
 
-//noooo
-Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
-Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
-Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
+
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('logout', [UserController::class, 'logout']);
@@ -71,6 +68,13 @@ Route::prefix('student')->group(function () {
     Route::get('getYears',[StudentController::class,'getYears']);
     Route::get('getSemester',[StudentController::class,'getSemester']);
     Route::post('addLecture',[StudentController::class,'addLecture']);
+    Route::post('addAnnouncement',[StudentController::class,'addAnnouncement']);
+    Route::get('getAnnouncement',[StudentController::class,'getAnnouncement']);
+    Route::post('addStudent',[StudentController::class,'addStudent']);
+    Route::post('addStudentRecord',[StudentController::class,'addStudentRecord']);
+    Route::post('addNotes/{id}',[StudentController::class,'addNotes']);
+    Route::post('addSchedule',[StudentController::class,'addSchedule']);
+    Route::post('getSchedule',[StudentController::class,'getSchedule']);
     
 
 

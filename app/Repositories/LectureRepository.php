@@ -5,6 +5,7 @@ use App\Models\Lecture;
 use App\Models\Course;
 use App\Models\Year;
 use App\Models\Semester;
+use App\Models\Announcement;
 use Carbon\Carbon;
 
 
@@ -83,4 +84,38 @@ use Carbon\Carbon;
          return $Years;
          }
      }
+
+     public function addAnnouncement($request){
+
+        $value = $request->file('value');
+        $fileName = time() . '_' . $value->getClientOriginalName(); 
+        $filePath = $value->storeAs('Announcement', $fileName, 'public');
+    
+        
+        $Announcement = Announcement::create([
+            'description' => $request['description'],
+            'value' => $filePath,
+            
+        ]);
+
+        return $Announcement;
+
+    }
+
+    public function getAnnouncement(){
+       
+
+        $Announcements=Announcement::latest()->get();
+
+       
+
+        $Announcements->transform(function ($Announcement) {
+            $Announcement->file_url = url('storage/' . $Announcement->value);
+           return $Announcement;
+        });
+
+        return $Announcements;
+    }
+
+
 }

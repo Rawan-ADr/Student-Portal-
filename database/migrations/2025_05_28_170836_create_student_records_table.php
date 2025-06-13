@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('amount');
             $table->string('result');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->string('academic_year',9);//2025-2026
             $table->date('resregistration_date');
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete()->cascadeOnUpdate();
