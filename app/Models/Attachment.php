@@ -21,8 +21,10 @@ class Attachment extends Model
         return $this->belongsToMany(Document::class,'document__attachments');
     }
 
-     public function Request()
+    public function attachmentValues()
     {
-        return $this->belongsToMany(Request::class,'attchment_values');
+        return $this->hasMany(AttchmentValue::class, 'attachment_id');
     }
+
 }
+

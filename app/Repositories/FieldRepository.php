@@ -66,9 +66,25 @@ class FieldRepository implements FieldRepositoryInterface
     public function addFieldValue($request,$Request){
         if ($request->has('fields')) {
             foreach ($request->input('fields') as $fieldId => $value) {
-                FieldValue::create([
+                FieldValue::update([
                     'request_id' => $Request->id,
                     'field_id' => $fieldId,
+                    'value' => $value,
+                ]);
+            }
+        }
+
+        return "done";
+
+
+    }
+
+    
+    public function updateFieldValue($request,$Request){
+        if ($request->has('fields')) {
+            foreach ($request->input('fields') as $fieldId => $value) {
+                $fieldvalue=FieldValue::where('request_id', $Request)->where('field_id', $fieldId)->first();
+                $fieldvalue->update([
                     'value' => $value,
                 ]);
             }

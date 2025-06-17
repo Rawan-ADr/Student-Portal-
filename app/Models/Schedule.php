@@ -12,6 +12,7 @@ class Schedule extends Model
         'start_time',
         'end_time',
         'type',
+        'doctor_name',
         'semester_id',
         'year_id',
         'course_id',

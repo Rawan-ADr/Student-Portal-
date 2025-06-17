@@ -17,5 +17,14 @@ class FieldValue extends Model
     ];
 
 
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'request_id');
+    }
+
+    public function field()
+    {
+        return $this->belongsTo(Field::class, 'field_id');
+    }
 }
 

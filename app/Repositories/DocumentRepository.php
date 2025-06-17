@@ -75,6 +75,13 @@ class DocumentRepository implements DocumentRepositoryInterface
 
     }
 
+    public function getall(){
+        $document= Document::all();
+        return $document;
+
+
+    }
+
     public function findall($id)
     {
         return Document::with(['fields' => function ($query) {
@@ -85,7 +92,7 @@ class DocumentRepository implements DocumentRepositoryInterface
                 ]);
         }, 'attachments:id,name,description'])
         ->select('documents.id', 'documents.name') 
-        ->find($id)->makeHidden(['fields.*.pivot', 'attachments.*.pivot']);
+        ->find($id);
     }
 
     

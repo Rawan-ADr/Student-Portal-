@@ -307,7 +307,7 @@ class DocumentService
      public function ShowAllDocuments(){
 
 
-        $documents=$this->documentRepository->all();
+        $documents=$this->documentRepository->getall();
         if (is_null($documents)) {
             
             return ["documents" => null, "message" => " no documents."];

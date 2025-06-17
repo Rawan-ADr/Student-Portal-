@@ -17,6 +17,14 @@ class AttchmentValue extends Model
     ];
 
 
-   
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'request_id');
+    }
+
+    public function attachment()
+    {
+        return $this->belongsTo(Attachment::class, 'attachment_id');
+    }
 
 }

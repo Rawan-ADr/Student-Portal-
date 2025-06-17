@@ -30,8 +30,10 @@ class Field extends Model
         return $this->belongsTo(FieldType::class);
     }
 
-    public function Request()
+   
+
+    public function fieldValues()
     {
-        return $this->belongsToMany(Request::class,'field_values');
+        return $this->hasMany(FieldValue::class, 'field_id');
     }
 }

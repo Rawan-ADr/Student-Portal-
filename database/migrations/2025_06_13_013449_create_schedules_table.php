@@ -16,6 +16,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->enum('type',['Theoretical','Parctical']);
+            $table->string('doctor_name')->nullable();
             $table->foreignId('semester_id')->constrained('semesters')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('year_id')->constrained('years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete()->cascadeOnUpdate();

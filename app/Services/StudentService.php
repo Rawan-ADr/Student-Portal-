@@ -14,6 +14,7 @@ use App\Repositories\AttachmentRepositoryInterface;
 use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\ScheduleRepositoryInterface;
 use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\RequestResource;
                      
 
 class StudentService{
@@ -118,9 +119,31 @@ class StudentService{
 
     }
 
-    public function getRequest($id)
+    public function getModRequest($id)
     {
-        $requests=$this->requestRepository->getRequest($id);
+        $requests=$this->requestRepository->getModRequest($id);
+        if($requests->isEmpty())
+        {
+
+            $message=" requests not found ";
+            $code=404;
+          
+        }
+
+        else
+        {
+            $message="requests get successfully";
+            $code=200;
+    
+        }
+        
+        return ['requests'=>$requests,'message'=>$message,'code'=>$code];
+
+    }
+
+    public function getRequests($id)
+    {
+        $requests=$this->requestRepository->getRequests($id);
         if(!$requests->isEmpty())
         {
 
@@ -154,6 +177,8 @@ class StudentService{
             {
                 $message=" document not found ";
                 $code=404;
+                return ['document'=> $document,'message'=>$message,'code'=>$code];
+
         
             }   
       
@@ -172,6 +197,49 @@ class StudentService{
         $code=200;
 
         return ['request'=>$Request,'message'=>$message,'code'=>$code];
+
+    }
+
+    public function updateRequest($request,$request_id)
+    {
+        $studentId=auth()->id();
+        $Request=$this->requestRepository-> getToUpdate($studentId,$request_id);
+        if(!is_null($Request))
+        {
+            $fieldValue=$this->fieldRepository->updateFieldValue($request,$request_id);
+            $this->attachmentRepository->updateAttachmentValue($request,$request_id);
+            $message="The request update successfully ";
+            $code=200;
+        }
+     
+       else{
+         $message="The request not found ";
+        $code=404;}
+
+        return ['request'=>$Request,'message'=>$message,'code'=>$code];
+
+    }
+
+    public function getRequest($id)
+    {
+        $request=$this->requestRepository->getRequest($id);
+        if(!is_null($request))
+        {
+
+
+            $message="request get successfully";
+            $code=200;
+        }
+
+        else
+        {
+            $message=" request not found ";
+            $code=404;
+            return ['request'=>$request,'message'=>$message,'code'=>$code];
+    
+        }
+        
+        return ['request'=>new RequestResource($request),'message'=>$message,'code'=>$code];
 
     }
 
@@ -391,6 +459,7 @@ class StudentService{
                         'start_time' => $lecture->start_time,
                         'end_time' => $lecture->end_time,
                         'type' => $lecture->type,
+                        'doctor_name'=>$lecture->doctor_name 
                     ];
                 })->values()
             ];

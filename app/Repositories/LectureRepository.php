@@ -19,7 +19,7 @@ use Carbon\Carbon;
         }
         else{
 
-        $lectures=Lecture::where('course_id',$course->id)->get();
+        $lectures=Lecture::where('course_id',$course->id)->where('type',$request['type'])->where('specialization',$request['specialization'])->get();
 
         if ($lectures->isEmpty()) {
             return null;
@@ -47,6 +47,8 @@ use Carbon\Carbon;
             'course_id' => $request['course_id'],
             'path' => $filePath,
             'date' => Carbon::now(), 
+            'type'=> $request['type'],
+            'specialization'=> $request['specialization'],
         ]);
 
         return $lecture;

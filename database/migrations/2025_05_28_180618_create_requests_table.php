@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->enum('status',['under review','in process','done']);
+            $table->enum('status',['under review','required modification','in process','done']);
             $table->string('point');
+            $table->string('modifications')->nullable();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('document_id')->constrained('documents')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

@@ -140,15 +140,49 @@ class StudentController extends Controller
 
     }
 
+    public function getModRequest($id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getModRequest($id);
+         return Response::Success($data['requests'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
 
     
+    public function getRequests($id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getRequests($id);
+         return Response::Success($data['requests'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
     public function getRequest($id)
     {
 
         $data=[];
      try{
          $data=$this->studentService->getRequest($id);
-         return Response::Success($data['requests'],$data['message'],$data['code']) ;
+         return Response::Success($data['request'],$data['message'],$data['code']) ;
      }
 
      catch (Throwable $th){
@@ -182,6 +216,23 @@ class StudentController extends Controller
         $data=[];
      try{
          $data=$this->studentService->sendRequest($request,$document_id);
+         return Response::Success($data['request'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function updateRequest(RequestRequest $request,$document_id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->updateRequest($request,$document_id);
          return Response::Success($data['request'],$data['message'],$data['code']) ;
      }
 

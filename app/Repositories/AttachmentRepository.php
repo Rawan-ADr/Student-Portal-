@@ -53,11 +53,36 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         if ($request->has('attachments')) {
             foreach ($request->attachments as $attachment_id => $file) {
 
-                $path = $file->store('attachments', 'public');
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->storeAs('attachments', $fileName, 'public');
                 AttchmentValue::create([
                     'request_id' => $Request->id,
                     'attachment_id' => $attachment_id,
-                    'value' => $path,
+                    'value' => $filePath,
+                ]);
+            }
+        }
+
+        return "done";
+
+
+    }
+
+    public function updateAttachmentValue($request,$Request){
+        if ($request->has('attachments')) {
+            foreach ($request->attachments as $attachment_id => $file) {
+
+                $attachment = AttchmentValue::where('request_id', $Request)
+                ->where('attachment_id', $attachment_id)
+                ->first();
+                if ($attachment) {
+                    
+                    Storage::disk('public')->delete($attachment->value);
+                }
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->storeAs('attachments', $fileName, 'public');
+                $attachment->update([
+                    'value' => $filePath,
                 ]);
             }
         }

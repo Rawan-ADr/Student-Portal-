@@ -14,18 +14,21 @@ class Request extends Model
         'date',
         'status',
         'point',
+        'modifications',
         'student_id',
         'document_id'
       
     ];
-
-    public function attachments()
+    public function fieldValues()
     {
-        return $this->belongsToMany(Validation::class,'attchment_values');
+        return $this->hasMany(FieldValue::class, 'request_id');
     }
 
-    public function fields()
+    
+    public function attachmentValues()
     {
-        return $this->belongsToMany(Validation::class,'field_values');
+        return $this->hasMany(AttchmentValue::class, 'request_id');
     }
+
+
 }

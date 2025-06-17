@@ -16,6 +16,7 @@ class ScheduleResource extends JsonResource
                     'start_time' => $schedule->start_time,
                     'end_time' => $schedule->end_time,
                     'type' => $schedule->type,
+                    'doctor_name' => $this->when(!is_null($schedule->doctor_name), $schedule->doctor_name),
                 ];
             }),
         ];

@@ -60,9 +60,12 @@ Route::prefix('student')->group(function () {
     Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
     Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
     Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
+    Route::get('getModRequest/{id}',[StudentController::class,'getModRequest']);
+    Route::get('getRequests/{id}',[StudentController::class,'getRequests']);
     Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
     Route::get('getDocument/{id}',[StudentController::class,'getDocument']);
     Route::post('sendRequest/{document_id}',[StudentController::class,'sendRequest']);
+    Route::post('updateRequest/{request_id}',[StudentController::class,'updateRequest']);
     Route::post('getLecture',[StudentController::class,'getLecture']);
     Route::post('getCourse',[StudentController::class,'getCourse']);
     Route::get('getYears',[StudentController::class,'getYears']);

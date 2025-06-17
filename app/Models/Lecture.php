@@ -13,7 +13,9 @@ class Lecture extends Model
         'course_id',
         'name',
         'date',
-        'path'
+        'path',
+        'type',
+        'specialization'
       
     ];
 
