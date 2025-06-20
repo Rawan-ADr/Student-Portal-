@@ -10,6 +10,7 @@ interface DocumentRepositoryInterface
     public function delete($id);
     public function all();
     public function findall($id);
+    public function findWithRelations($id);
     
     
 

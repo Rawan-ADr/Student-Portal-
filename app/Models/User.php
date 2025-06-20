@@ -44,4 +44,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
 }

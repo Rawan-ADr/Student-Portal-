@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -42,6 +43,26 @@ class UserRepository implements UserRepositoryInterface
     public function findByEmail(string $email)
     {
         return User::where('email', $email)->first();
+    }
+
+    public function assignRoleToUser(array $data){
+
+         $user = User::findOrFail($data['user_id']);
+         $role = Role::findOrFail($data['role_id']);
+
+         if(!is_null($user) && !is_null($role) ){
+
+          $user->assignRole($role->name);
+
+          $permissions = $role->permissions->pluck('name')->toArray(); 
+          $user->givePermissionTo($permissions);
+
+          return true;
+        }
+        return false;
+
+
+
     }
 
     

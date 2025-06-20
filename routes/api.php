@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,15 +31,18 @@ Route::post('Login',[StudentController::class,'login']);
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('logout', [UserController::class, 'logout']);
     Route::get('logout', [StudentController::class, 'logout']);
+    Route::get('index/role', [UserController::class, 'indexRole']);
+    Route::get('index/permission', [UserController::class, 'indexPermissions']);
+    Route::post('assignPermissions/toRole', [UserController::class, 'assignPermissions']);
+    Route::post('assignRole/toUser', [UserController::class, 'assignRole']);
+   
+
 
 Route::prefix('document')->group(function () {
     Route::post('create',[DocumentController::class,'create']);
     Route::post('update/{document_id}',[DocumentController::class,'update']);
-   // ->middleware('can:group.update');
     Route::get('delete/{document_id}',[DocumentController::class,'delete']);
-   // ->middleware('can:group.delete');
    Route::post('create/field',[DocumentController::class,'createField']);
-   // ->middleware('can:doc.create');
    Route::get('index/field/type',[DocumentController::class,'indexType']);
    Route::get('index/validation',[DocumentController::class,'indexValidation']);
    Route::get('delete/field/{field_id}',[DocumentController::class,'deleteField']);
@@ -46,11 +51,18 @@ Route::prefix('document')->group(function () {
    Route::get('index/fieldById/{field_id}',[DocumentController::class,'indexFieldById']);
    Route::post('create/attachment',[DocumentController::class,'createAttachment']);
    Route::get('index/attachment',[DocumentController::class,'indexAttachment']);
+   Route::get('index/attachment/by/id/{attachment_id}',[DocumentController::class,'indexAttachmentById']);
    Route::post('update/attachment/{attachment_id}',[DocumentController::class,'updateAttachment']);
    Route::get('delete/attachment/{attachment_id}',[DocumentController::class,'deleteAttachment']);
    Route::get('index/condition',[DocumentController::class,'indexCondition']);
    Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
    Route::get('index/document/{document_id}',[DocumentController::class,'indexDocument']);
+   Route::post('create/workflow',[DocumentController::class,'createWorkflow']);
+   Route::post('update/workflow/{workflow_id}',[DocumentController::class,'updateWorkflow']);
+   Route::get('ShowAllWorkflows',[DocumentController::class,'ShowAllWorkflows']);
+   Route::get('index/Workflow/{workflow_id}',[DocumentController::class,'indexWorkflow']);
+   Route::get('delete/Workflow/{workflow_id}',[DocumentController::class,'deleteWorkflow']);
+   Route::post('assign/workflow/to/document',[DocumentController::class,'assignWorkflowToDocument']);
    // Route::get('index',[GroupController::class,'index'])
    // ->middleware('can:group.index');
 
@@ -82,6 +94,20 @@ Route::prefix('student')->group(function () {
 
 
 
+});
+
+Route::prefix('department')->group(function () {
+    Route::post('create',[DepartmentController::class,'create']);
+    Route::post('update/{department_id}',[DepartmentController::class,'update']);
+    Route::get('delete/{department_id}',[DepartmentController::class,'delete']);
+    Route::get('index',[DepartmentController::class,'index']);
+});
+
+Route::prefix('employee')->group(function () {
+    Route::post('create',[EmployeeController::class,'create']);
+    Route::post('update/{employee_id}',[EmployeeController::class,'update']);
+    Route::get('delete/{employee_id}',[EmployeeController::class,'delete']);
+    Route::get('index',[EmployeeController::class,'index']);
 });
 });
 

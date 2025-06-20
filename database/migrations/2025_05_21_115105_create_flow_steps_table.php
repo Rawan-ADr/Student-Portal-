@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('flow_steps', function (Blueprint $table) {
             $table->id();
+            $table->string('step_name');
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('workflow_id')->constrained('workflows')->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedInteger('step_order');

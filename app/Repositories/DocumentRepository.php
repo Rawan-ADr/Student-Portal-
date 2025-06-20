@@ -34,11 +34,23 @@ class DocumentRepository implements DocumentRepositoryInterface
     }
 
 
-    public function find($id)
-    {
-        $document= Document::find($id);
-        return $document->name;
-    }
+   public function findWithRelations($id)
+  {
+    $document = Document::with(['fields', 'attachments', 'condition'=> function
+     ($query) {
+            $query->select('conditions.id', 'conditions.name', 'conditions.error_message',
+            'conditions.created_at','conditions.updated_at'); 
+        }
+    ])->findOrFail($id);
+
+    return $document;
+   }
+
+   public function find($id){
+    
+     $document = Document::findOrFail($id);
+     return $document;
+   }
 
     public function update(array $data, $id)
     {
@@ -69,7 +81,7 @@ class DocumentRepository implements DocumentRepositoryInterface
 
 
     public function all(){
-        $document= Document::all()->select('name');
+        $document= Document::all()->select('id','name');
         return $document;
 
 

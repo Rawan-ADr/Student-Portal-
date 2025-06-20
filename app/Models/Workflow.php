@@ -21,7 +21,7 @@ class Workflow extends Model
 
     public function document()
     {
-        return $this->belongsToMany(Document::class);
+        return $this->belongsToMany(Document::class,'document__workflows');
     }
 
 

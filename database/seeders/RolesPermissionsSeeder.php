@@ -17,17 +17,23 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole= Role::create(['name'=>'admin']);
-
-        $permissions=[
-           'doc.create' 
+           $permissions = [
+            'view requests',
+            'create documents',
+            'approve requests',
+            'reject requests',
+            
         ];
 
-       foreach ($permissions as $permissionName) {
-            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+        foreach ($permissions as $perm) {
+            Permission::firstOrCreate(['name' => $perm,'guard_name' => 'web']);
         }
 
-        $adminRole->syncPermissions($permissions);
+        $roles = ['admin', 'professor', 'affairs_officer', 'exam_officer'];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role]);
+        }
         
 
 
@@ -37,10 +43,8 @@ class RolesPermissionsSeeder extends Seeder
             'password' =>bcrypt('12345678'),
         ]);
 
-        $adminUser->assignRole($adminRole);
-        $permissions=$adminRole->permissions()->pluck('name')->toArray();
-         $adminUser->givePermissionTo($permissions);
-
+        $adminUser->assignRole('admin');
+        
 
 
 
