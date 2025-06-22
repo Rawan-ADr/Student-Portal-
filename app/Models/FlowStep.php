@@ -13,7 +13,8 @@ class FlowStep extends Model
         'role_id',
         'workflow_id',
         'step_order',
-        'is_final'
+        'is_final',
+        'step_name'
       
     ];
 

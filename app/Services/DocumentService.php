@@ -13,6 +13,8 @@ use App\Repositories\TypeRepositoryInterface;
 use App\Repositories\AttachmentRepositoryInterface;
 use App\Repositories\ValidationRepositoryInterface;
 use App\Repositories\ConditionRepositoryInterface;
+use App\Repositories\WorkflowRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 
 class DocumentService
@@ -23,17 +25,19 @@ class DocumentService
     private  $validationRepository;
     private  $attachmentRepository;
     private  $conditionRepository;
+    private  $workflowRepository;
 
      public function __construct(DocumentRepositoryInterface $documentRepository,
      FieldRepositoryInterface $fieldRepository,TypeRepositoryInterface $typeRepository,
      ValidationRepositoryInterface $validationRepository,AttachmentRepositoryInterface $attachmentRepository,
-     ConditionRepositoryInterface $conditionRepository){
+     ConditionRepositoryInterface $conditionRepository,WorkflowRepositoryInterface $workflowRepository){
         $this->documentRepository = $documentRepository;
         $this->fieldRepository = $fieldRepository;
         $this->typeRepository = $typeRepository;
         $this->validationRepository = $validationRepository;
         $this->attachmentRepository = $attachmentRepository;
         $this->conditionRepository = $conditionRepository;
+        $this->workflowRepository = $workflowRepository;
         
      }
      
@@ -290,6 +294,23 @@ class DocumentService
 
     }
 
+    public function indexAttachmentById($attachment_id){
+
+         if (!Auth::user()->hasRole('admin')) {
+            return ['attachment'=>null,'message' => 'you cant see attachment'];
+          }
+
+          $attachment = $this->attachmentRepository->find($attachment_id);
+
+          if (!$attachment) {
+            return ['attachment'=>null,'message' => 'attachment not found'];
+          }
+
+         
+         return ['attachment'=>$attachment,'message' => 'attachment deleted successfully'];
+
+    }
+
     public function indexCondition(){
 
          if ( Auth::user()->hasRole('admin')) {
@@ -305,7 +326,10 @@ class DocumentService
 
     
      public function ShowAllDocuments(){
-
+            
+        if (!Auth::user()->hasRole('admin')) {
+            return ['documents'=>null,'message' => 'you cant see documents'];
+          }
 
         $documents=$this->documentRepository->getall();
         if (is_null($documents)) {
@@ -322,7 +346,11 @@ class DocumentService
 
     public function indexDocument($document_id){
 
-        $document=$this->documentRepository->find($document_id);
+        if (!Auth::user()->hasRole('admin')) {
+            return ['document'=>null,'message' => 'you cant see document'];
+          }
+
+        $document=$this->documentRepository->findWithRelations($document_id);
         if (is_null($document)) {
             
             return ["document" => null, "message" => " no document."];
@@ -332,7 +360,110 @@ class DocumentService
         }
 
     }
+
+
+    public function createWorkflow($request){
+
+        if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant create workflow'];
+          }
+
+          return DB::transaction(function () use ($request) {
+            $workflow = $this->workflowRepository->create($request);
+
+            $this->workflowRepository->addSteps($workflow, $request['steps']);
+
+            $document = $this->documentRepository->find($request['document_id']);
+            $document->workflow()->attach($workflow->id);
+
+            return ["workflow" => $workflow, "message" => " workflow added for these document successfully."];
+
+            
+        });
     }
+
+    public function updateWorkflow($request,$workflow_id){
+
+        if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant update workflow'];
+          }
+
+           $workflow = $this->workflowRepository->updateWithSteps($workflow_id, $request);
+
+            return ["workflow" => $workflow, "message" => " workflow updated successfully."];
+    }
+
+     public function ShowAllWorkflows(){
+            
+        if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant see workflows'];
+          }
+
+        $workflow = $this->workflowRepository->all();
+        if (is_null($workflow)) {
+            
+            return ["workflow" => null, "message" => " no workflows."];
+        }
+        else{
+            return ["workflow" => $workflow, "message" => " this is all workflows."];
+        }
+        
+    }
+
+    public function indexWorkflow($workflow_id){
+
+        if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant see workflow'];
+          }
+
+        $workflow = $this->workflowRepository->find($workflow_id);
+        if (is_null($workflow)) {
+            
+            return ["workflow" => null, "message" => " no workflows."];
+        }
+        else{
+            return ["workflow" => $workflow, "message" => " workflow indexed successfully."];
+        }
+
+    }
+
+    public function deleteWorkflow($workflow_id){
+
+         if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant delete workflow'];
+          }
+
+        $workflow = $this->workflowRepository->find($workflow_id);
+        if (is_null($workflow)) {
+            
+            return ["workflow" => null, "message" => " no workflows."];
+        }
+        else{
+            $this->workflowRepository->delete($workflow_id);
+            return ["workflow" => null, "message" => " workflow deleted successfully."];
+        }
+    }
+
+    public function assignWorkflowToDocument( $request){
+
+         if (!Auth::user()->hasRole('admin')) {
+            return ['workflow'=>null,'message' => 'you cant assign workflow to document'];
+          }
+
+        $workflow = $this->workflowRepository->assignWorkflow($request);
+
+        if($workflow){
+            return ["workflow" => null, "message" => " workflow assigned successfully."];
+        }
+        return ["workflow" => null, "message" => " workflow_id or document_id not found."];
+    }
+        
+    }
+
+
+
+    
+    
     
            
     

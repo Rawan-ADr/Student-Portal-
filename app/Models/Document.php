@@ -32,7 +32,7 @@ class Document extends Model
 
     public function workflow()
     {
-        return $this->belongsToMany(Workflow::class);
+        return $this->belongsToMany(Workflow::class,'document__workflows');
     }
 
 

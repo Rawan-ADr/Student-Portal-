@@ -25,6 +25,15 @@ use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\LectureRepository;
 use App\Repositories\ScheduleRepositoryInterface;
 use App\Repositories\ScheduleRepository;
+use App\Repositories\RolePermissionsRepositoryInterface;
+use App\Repositories\RolePermissionsRepository;
+use App\Repositories\DepartmentRepositoryInterface;
+use App\Repositories\DepartmentRepository;
+use App\Repositories\EmployeeRepositoryInterface;
+use App\Repositories\EmployeeRepository;
+use App\Repositories\WorkflowRepositoryInterface;
+use App\Repositories\WorkflowRepository;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +53,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ConditionRepositoryInterface::class, ConditionRepository::class);
         $this->app->bind(LectureRepositoryInterface::class, LectureRepository::class);
         $this->app->bind(ScheduleRepositoryInterface::class, ScheduleRepository::class);
+        $this->app->bind(RolePermissionsRepositoryInterface::class, RolePermissionsRepository::class);
+        $this->app->bind(DepartmentRepositoryInterface::class, DepartmentRepository::class);
+        $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
+        $this->app->bind(WorkflowRepositoryInterface::class, WorkflowRepository::class);
     }
 
     /**

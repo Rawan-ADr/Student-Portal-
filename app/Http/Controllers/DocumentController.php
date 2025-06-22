@@ -8,6 +8,9 @@ use App\Http\Requests\FieldRequest;
 use App\Http\Requests\FieldUpdateRequest;
 use App\Http\Requests\DocumentFieldRequest;
 use App\Http\Requests\AttachmentRequest;
+use App\Http\Requests\WorkflowRequest;
+use App\Http\Requests\UpdateWorkflowRequest;
+use App\Http\Requests\AssignWorkflowToDocumentRequest;
 use App\Services\DocumentService;
 use App\Http\Responses\Response;
 use PHPUnit\Event\Code\Throwable;
@@ -247,6 +250,21 @@ class DocumentController extends Controller
         }
     }
 
+    public function indexAttachmentById($attachment_id){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->indexAttachmentById($attachment_id);
+           return Response::Success($data['attachment'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
     public function indexCondition(){
 
         $data=[];
@@ -295,5 +313,100 @@ class DocumentController extends Controller
 
         }
 
+    }
+
+     public function createWorkflow(WorkflowRequest $request){
+
+        $data=[];
+        try{
+    
+           $data=$this->documentService->createWorkflow($request->validated());
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+
+    }
+
+    public function updateWorkflow(UpdateWorkflowRequest $request,$workflow_id){
+
+        $data=[];
+        try{
+    
+           $data=$this->documentService->updateWorkflow($request->validated(),$workflow_id);
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+
+    }
+
+     public function ShowAllWorkflows(){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->ShowAllWorkflows();
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
+     public function indexWorkflow($workflow_id){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->indexWorkflow($workflow_id);
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
+    public function deleteWorkflow($workflow_id){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->deleteWorkflow($workflow_id);
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
+
+    public function assignWorkflowToDocument(AssignWorkflowToDocumentRequest $request){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->assignWorkflowToDocument($request->validated());
+           return Response::Success($data['workflow'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
     }
 }

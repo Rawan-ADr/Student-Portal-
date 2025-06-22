@@ -9,15 +9,19 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Repositories\UserRepositoryInterface;
+use App\Repositories\RolePermissionsRepositoryInterface;
 
 
 class UserService
 {
     private  $userRepository;
+    private  $rolepermRepository;
     
 
-     public function __construct(UserRepositoryInterface $userRepository){
+     public function __construct(UserRepositoryInterface $userRepository,
+     RolePermissionsRepositoryInterface $rolepermRepository ){
         $this->userRepository = $userRepository;
+        $this-> rolepermRepository= $rolepermRepository;
      }
      
 
@@ -57,8 +61,65 @@ class UserService
         return ['user'=>$user,'message'=>$message,'code'=>$code];
     }
 
+    public function indexRole(){
 
-   
-    
-   
-}
+        if ( Auth::user()->hasRole('admin')) {
+
+            $role = $this->rolepermRepository->getAllRoles();
+
+            if(is_null($role)){
+                return ['role'=>null,'message'=>'not found any role'];
+            }
+            return ['role'=>$role,'message'=>'role indexed successflly'];
+        }
+        return ['role'=>null,'message'=>'you can not see role'];
+
+
+    }
+
+    public function indexPermissions(){
+
+        if ( Auth::user()->hasRole('admin')) {
+
+            $permission = $this->rolepermRepository->getAllPermissions();
+
+            if(is_null($permission)){
+                return ['permission'=>null,'message'=>'not found any permission'];
+            }
+            return ['permission'=>$permission,'message'=>'permission indexed successflly'];
+        }
+        return ['permission'=>null,'message'=>'you can not see permisssion'];
+
+    }
+
+    public function assignRole($request){
+
+        if ( Auth::user()->hasRole('admin')) {
+
+            $result = $this->userRepository->assignRoleToUser($request);
+            if($result){
+                return ['result'=> null,'message'=>'role added to user successfully'];
+            }
+            return ['result'=> null,'message'=>'user or role not found'];
+
+        }
+        return ['result'=> null,'message'=>'you can not do this!'];
+
+    }
+
+
+    public function assignPermissions($request){
+        if ( Auth::user()->hasRole('admin')) {
+
+            $result = $this->rolepermRepository->assignPermissions($request);
+            if($result){
+                return ['result'=> null,'message'=>'permisssion added to role successfully'];
+            }
+            return ['result'=> null,'message'=>'permisssion or role not found'];
+
+        }
+        return ['result'=> null,'message'=>'you can not do this!'];
+
+    }
+    }
+
