@@ -1,8 +1,12 @@
 <?php
 namespace App\Repositories;
 use App\Models\Student;
+use App\Models\StudentNote;
+use App\Models\Note;
 use App\Models\StudentRecord;
 use Carbon\Carbon;
+use App\Http\Resources\StudentRecordResource;
+use App\Http\Resources\StudentRecordCollectionResource;
 
 class StudentRepository implements StudentRepositoryInterface
 {
@@ -52,13 +56,27 @@ class StudentRepository implements StudentRepositoryInterface
             return null;
         } 
 
-        $studentRecord->update([
-            'notes' => $request->input('notes')
+        $note= Note::find($request->input('notes_id'));
+        if (!$note) {
+            return null;
+        }
+
+        $studentNote=StudentNote::create([
+            'notes_id'=>$request->input('notes_id'),
+            'student_record_id'=>$id
         ]);
-        return $studentRecord;
+        
+        $studentRecord = StudentRecord::with(['studentNotes.note'])->find($id);
+        return new StudentRecordResource($studentRecord);
     }
 
-    
+    public function getStudentRecords($id){
+        $records = StudentRecord::with(['studentNotes.note', 'student', 'year'])
+        ->where('student_id', $id)
+        ->get();
+
+          return StudentRecordCollectionResource::collection($records);
+    }
 
 
 }

@@ -20,4 +20,8 @@ class Semester extends Model
     }
 
 
+    public function courseRecords()
+    {
+        return $this->hasMany(CourseRecord::class);
+    }
 }

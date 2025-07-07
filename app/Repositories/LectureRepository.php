@@ -7,6 +7,7 @@ use App\Models\Year;
 use App\Models\Semester;
 use App\Models\Announcement;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
     class LectureRepository implements LectureRepositoryInterface
@@ -103,6 +104,48 @@ use Carbon\Carbon;
         return $Announcement;
 
     }
+
+    public function deleteAnnouncement($id)
+    {
+        $announcement = Announcement::find($id);
+
+        
+        if ($announcement&&Storage::disk('public')->exists($announcement->value)) {
+            Storage::disk('public')->delete($announcement->value);
+            $announcement->delete();
+            return true;
+        }
+    
+       return false;
+        
+
+     }
+
+     public function updateAnnouncement($request,$id)
+     {
+         $announcement = Announcement::find($id);
+ 
+         
+         if (!$announcement) {
+
+            return false;
+         }
+         Storage::disk('public')->delete($announcement->value);
+     
+         $value = $request->file('value');
+         $fileName = time() . '_' . $value->getClientOriginalName(); 
+         $filePath = $value->storeAs('Announcement', $fileName, 'public');
+
+         $announcement->update([
+            'description' => $request['description'],
+            'value' => $filePath,
+            
+        ]);
+
+        return true;
+         
+ 
+      }
 
     public function getAnnouncement(){
        

@@ -11,10 +11,24 @@ class StudentRecord extends Model
     protected $fillable = [
         'amount',
         'result',
-        'notes',
         'academic_year',
         'resregistration_date',
         'student_id',
         'year_id',
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+    public function studentNotes()
+    {
+        return $this->hasMany(StudentNote::class);
+    }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class);
+    }
+
 }

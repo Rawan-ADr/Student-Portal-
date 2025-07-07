@@ -21,6 +21,7 @@ class Student   extends Authenticatable
         'registration_place_number',
         'nationality',
         'national_number',
+        'university_number',
         'governorate',
         'temporary_address',
         'address',
@@ -32,4 +33,16 @@ class Student   extends Authenticatable
         'department'
       
     ];
+
+    public function courseRecords()
+    {
+        return $this->hasMany(CourseRecord::class);
+    }
+
+    public function studentRecords()
+    {
+        return $this->hasMany(StudentRecord::class);
+    }
+
+
 }

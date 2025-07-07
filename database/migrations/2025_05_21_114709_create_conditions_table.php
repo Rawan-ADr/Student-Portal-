@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('validation_query')->default('text');
+            $table->json('variables');
             $table->text('error_message')->nullable();
             $table->timestamps();
         });

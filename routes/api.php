@@ -7,6 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ExaminationController;
+use App\Http\Controllers\AffairsController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,19 +85,45 @@ Route::prefix('student')->group(function () {
     Route::post('getCourse',[StudentController::class,'getCourse']);
     Route::get('getYears',[StudentController::class,'getYears']);
     Route::get('getSemester',[StudentController::class,'getSemester']);
-    Route::post('addLecture',[StudentController::class,'addLecture']);
-    Route::post('addAnnouncement',[StudentController::class,'addAnnouncement']);
     Route::get('getAnnouncement',[StudentController::class,'getAnnouncement']);
-    Route::post('addStudent',[StudentController::class,'addStudent']);
-    Route::post('addStudentRecord',[StudentController::class,'addStudentRecord']);
-    Route::post('addNotes/{id}',[StudentController::class,'addNotes']);
-    Route::post('addSchedule',[StudentController::class,'addSchedule']);
     Route::post('getSchedule',[StudentController::class,'getSchedule']);
+    Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
+    Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
     
 
+});
 
+Route::prefix('exam')->group(function () {
+    Route::post('importMarks',[ExaminationController::class,'importMarks']);
+    Route::get('getRequests',[ExaminationController::class,'getExamRequests']);
+    Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests']);
+    Route::get('getRequestData/{id}',[ExaminationController::class,'getRequestData']);
+});
+
+
+Route::prefix('else')->group(function () {
+    Route::post('addSchedule',[StudentController::class,'addSchedule']); 
+    Route::post('addLecture',[StudentController::class,'addLecture']);
+    Route::post('addAnnouncement',[StudentController::class,'addAnnouncement']);
+    Route::post('updateAnnouncement/{id}',[StudentController::class,'updateAnnouncement']);
+    Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement']);
+});
+
+Route::prefix('Affairs')->group(function () {
+    Route::post('addStudent',[AffairsController::class,'addStudent']);
+    Route::post('addStudentRecord',[AffairsController::class,'addStudentRecord']);
+    Route::post('addNotes/{id}',[AffairsController::class,'addNotes']);
+    Route::get('getStudentRecords/{id}',[AffairsController::class,'getStudentRecords']);
+    Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
 
 });
+
+Route::prefix('Review')->group(function () {
+    Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview']);
+    Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest']);
+    Route::post('requestModification/{id}',[ReviewController::class,'requestModification']);
+
+ });
 
 Route::prefix('department')->group(function () {
     Route::post('create',[DepartmentController::class,'create']);

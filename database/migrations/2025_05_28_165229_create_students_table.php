@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('registration_place_number');
             $table->string('nationality');
             $table->string('national_number',11)->unique();
+            $table->string('university_number')->unique()->nullable();
             $table->string('governorate');
             $table->string('temporary_address');
             $table->string('address');

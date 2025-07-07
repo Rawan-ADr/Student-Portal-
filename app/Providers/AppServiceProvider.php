@@ -33,6 +33,8 @@ use App\Repositories\EmployeeRepositoryInterface;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\WorkflowRepositoryInterface;
 use App\Repositories\WorkflowRepository;
+use App\Repositories\MarkRepositoryInterface;
+use App\Repositories\MarkRepository;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -57,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DepartmentRepositoryInterface::class, DepartmentRepository::class);
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(WorkflowRepositoryInterface::class, WorkflowRepository::class);
+        $this->app->bind(MarkRepositoryInterface::class, MarkRepository::class);
     }
 
     /**

@@ -30,5 +30,14 @@ class Request extends Model
         return $this->hasMany(AttchmentValue::class, 'request_id');
     }
 
+    public function document()
+    {
+        return $this->belongsTo(Document::class);
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 
 }

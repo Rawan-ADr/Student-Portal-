@@ -10,4 +10,10 @@ use App\Models\Lecture;
     public function getYear();
     public function getSemester();
     public function add($request);
+    public function getCourse($request);
+    public function addAnnouncement($request);
+    public function deleteAnnouncement($id);
+    public function updateAnnouncement($request,$id);
+    public function getAnnouncement();
+
 }

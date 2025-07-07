@@ -191,13 +191,19 @@ class StudentService{
     {
         $studentId=auth()->id();
         $Request=$this->requestRepository->create($studentId,$document_id);
-        $fieldValue=$this->fieldRepository->addFieldValue($request,$Request);
-        $this->attachmentRepository->addAttachmentValue($request,$Request);
+        if($Request['code']==422){
+            return ['request'=>$Request['request'],'message'=>$Request['message'],'code'=>$Request['code']];
+
+        }
+        else{
+        $idd=$Request['request'];
+        $fieldValue=$this->fieldRepository->addFieldValue($request,$idd);
+        $this->attachmentRepository->addAttachmentValue($request,$idd);
         $message="The request has been sent ";
         $code=200;
 
-        return ['request'=>$Request,'message'=>$message,'code'=>$code];
-
+        return ['request'=>$Request['request'],'message'=>$Request['message'],'code'=>$Request['code']];
+        }
     }
 
     public function updateRequest($request,$request_id)
@@ -318,7 +324,7 @@ class StudentService{
 
     }
 
-
+//////////////////////////
 
     public function addLecture($request){
         $lecture =$this->lectureRepository->add($request);
@@ -333,7 +339,7 @@ class StudentService{
         return ['lecture'=>$lecture,'message'=>$message,'code'=>$code];
     }
 
-
+///////////////
     public function addAnnouncement($request){
         $Announcement =$this->lectureRepository->addAnnouncement($request);
         if(!$Announcement){
@@ -343,6 +349,36 @@ class StudentService{
         }
         $message="Announcement add successfully";
         $code=200; 
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+    }
+
+    ///////////////
+    public function updateAnnouncement($request,$id){
+        $Announcement =$this->lectureRepository->updateAnnouncement($request,$id);
+        if(!$Announcement){
+            $Announcement=null;
+            $message="not found";
+            $code=404;
+        }
+        else{
+        $message="Announcement updated successfully";
+        $code=200; }
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+    }
+
+    ///////////////
+    public function deleteAnnouncement($id){
+        $Announcement =$this->lectureRepository->deleteAnnouncement($id);
+        if(!$Announcement){
+            $Announcement=null;
+            $message="not found";
+            $code=404;
+        }
+        else{
+        $message="Announcement deleted successfully";
+        $code=200; }
 
         return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
     }
@@ -366,60 +402,6 @@ class StudentService{
         return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
 
 
-
-    }
-
-    public function addStudent($request){
-        $student=$this->studentRepository->createStudent($request);
-        if(!$student){
-            $student=null;
-            $message="error...";
-            $code=404;
-        }
-        $message="student add successfully";
-        $code=200; 
-
-        return ['student'=>$student,'message'=>$message,'code'=>$code];
-
-    }
-
-    public function addStudentRecord($request){
-        $studentRecord=$this->studentRepository->createStudentRecord($request);
-        if(!$studentRecord){
-            $studentRecord=null;
-            $message="error...";
-            $code=404;
-        }
-        else{
-        $message="studentRecord add successfully";
-        $code=200; }
-
-        return ['studentRecord'=>$studentRecord,'message'=>$message,'code'=>$code];
-
-    }
-
-
-    public function addNotes($request,$id){
-
-        $request->validate([
-            'notes' => 'required|string|max:1000',
-        ]);
-
-        $studentRecord=$this->studentRepository->addNotes($request,$id);
-        
-        if(is_null($studentRecord))
-        {
-            $studentRecord=null;
-            $message="record not found";
-            $code=404;
-        }
-
-        else{
-        $message="Notes add successfully";
-        $code=200; 
-        }
-
-        return ['studentRecord'=>$studentRecord,'message'=>$message,'code'=>$code];
 
     }
 

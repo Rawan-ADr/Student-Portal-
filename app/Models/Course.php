@@ -29,6 +29,11 @@ class Course extends Model
     {
         return $this->belongsTo(Year::class);
     }
+
+    public function courseRecords()
+    {
+        return $this->hasMany(CourseRecord::class);
+    }
 }
 
 

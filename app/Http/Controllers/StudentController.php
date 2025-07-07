@@ -37,60 +37,13 @@ class StudentController extends Controller
 
 
     }
+/////////////////
+   
 
-    public function addStudent(StudentRequest $request)
-    {
+  
 
-        $data=[];
-     try{
-         $data=$this->studentService->addStudent($request->validated());
-         return Response::Success($data['student'],$data['message'],$data['code']) ;
-     }
-
-     catch (Throwable $th){
-         $message=$th->getmessage();
-         return Response::Error($data,$message);
-
-     }
-
-
-    }
-
-    public function addStudentRecord(StudentRecordRequest $request)
-    {
-
-        $data=[];
-     try{
-         $data=$this->studentService->addStudentRecord($request->validated());
-         return Response::Success($data['studentRecord'],$data['message'],$data['code']) ;
-     }
-
-     catch (Throwable $th){
-         $message=$th->getmessage();
-         return Response::Error($data,$message);
-
-     }
-
-    }
-
-    public function addNotes(Request $request,$id)
-    {
-
-        $data=[];
-     try{
-         $data=$this->studentService->addNotes($request,$id);
-         return Response::Success($data['studentRecord'],$data['message'],$data['code']) ;
-     }
-
-     catch (Throwable $th){
-         $message=$th->getmessage();
-         return Response::Error($data,$message);
-
-     }
-
-
-   }
-
+   
+//
     public function logout(){
 
         $data=[];
@@ -349,6 +302,42 @@ class StudentController extends Controller
 
     }
 
+    public function updateAnnouncement(Request $request,$id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->updateAnnouncement($request,$id);
+         return Response::Success($data['Announcement'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+    public function deleteAnnouncement($id)
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->deleteAnnouncement($id);
+         return Response::Success($data['Announcement'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
+
+
     public function getAnnouncement()
     {
 
@@ -385,9 +374,9 @@ class StudentController extends Controller
 
         }
 
-        }
+    }
 
-        public function getSchedule(Request $request)
+    public function getSchedule(Request $request)
         {
 
             $data=[];
@@ -402,7 +391,7 @@ class StudentController extends Controller
 
         }
 
-        }
+    }
 
 
 }
