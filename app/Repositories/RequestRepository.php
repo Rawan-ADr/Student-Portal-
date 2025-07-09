@@ -5,10 +5,16 @@ use App\Models\FlowStep;
 use App\Models\Document_Workflow;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\Factories\RequestHandlerFactory;
 
 class RequestRepository implements RequestRepositoryInterface
 {
 
+    private RequestHandlerFactory $RequestHandlerFactory;
+
+    public function __construct(RequestHandlerFactory $RequestHandlerFactory){
+       $this->RequestHandlerFactory = $RequestHandlerFactory;
+    }
     public function getReceivedRequest($id){
         return Request::where('student_id', $id)->where('status', 'done')->get() ;
 
@@ -157,7 +163,10 @@ class RequestRepository implements RequestRepositoryInterface
         $studentRequest->update([
             'status'=>"in process"
         ]);
-        return $studentRequest;
+
+            $handler =$this->RequestHandlerFactory->make($studentRequest->document);
+            $result = $handler->handle($studentRequest);
+                return $studentRequest;
      }
         return null;
 

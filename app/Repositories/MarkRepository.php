@@ -1,6 +1,12 @@
 <?php
 namespace App\Repositories;
 use App\Models\CourseRecord;
+use App\Models\StudentFile;
+use App\Models\Mark;
+use App\Models\Semester;
+use App\Models\Year;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 
 class MarkRepository implements MarkRepositoryInterface
@@ -22,4 +28,52 @@ class MarkRepository implements MarkRepositoryInterface
         ->get();
 
     }
+
+
+ 
+
+function checkPromotionStatus($studentId)
+{
+    $studentFile = StudentFile::where('student_id', $studentId)->first();
+    if (!$studentFile) return 'Student file not found';
+
+    // احضار كل آخر محاولة لكل مادة
+    $failedSubjectsCount = DB::table('marks as m')
+        ->join('course_records as cr', 'm.course_record_id', '=', 'cr.id')
+        ->where('cr.student_id', $studentId)
+        ->select('cr.course_id', DB::raw('MAX(m.id) as latest_mark_id'))
+        ->groupBy('cr.course_id')
+        ->get()
+        ->pluck('latest_mark_id')
+        ->toArray();
+
+    // تحقق من حالة كل محاولة أخيرة: هل هي "fail"
+    $carriedCoursesCount = Mark::whereIn('id', $failedSubjectsCount)
+        ->where('status', 'fail')
+        ->count();
+
+    $promoted = $carriedCoursesCount <= 4;
+
+    // تحديث حالة الترفع
+    
+
+    if ($promoted) {
+        $today = Carbon::now();
+        $currentSemester = Semester::where('start_date', '<=', $today)
+            ->where('end_date', '>=', $today)
+            ->first();
+        $nextYear = Year::where('id', '>', $studentFile->year_id)->orderBy('id')->first();
+        if ($nextYear) {
+            $studentFile->year_id = $nextYear->id;
+            $studentFile->semester_id = $currentSemester->id;
+            $studentFile->academic_year = Carbon::now();
+            $studentFile->status = "promoted";
+        }
+    }
+
+    $studentFile->save();
+
+    return $promoted ? 'Student promoted' : 'Student not promoted';
+}
+
 }

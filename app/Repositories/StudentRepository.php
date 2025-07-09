@@ -44,6 +44,14 @@ class StudentRepository implements StudentRepositoryInterface
             'student_id' => $request['student_id'],
             'year_id' => $request['year_id'],
         ]); 
+
+         $studentFile=StudentFile::create([
+            'semester_id' => 1,
+            'year_id' => 1,
+            'academic_year' => now()->year,
+            'student_id' => $request['student_id'],
+            'status' => "new",
+        ]);
         return $studentRecord;
     }
 

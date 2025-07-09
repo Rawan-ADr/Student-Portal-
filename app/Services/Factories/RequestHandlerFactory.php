@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Factories;
+namespace App\Services\Factories;
 
 use App\Models\Document;
 use App\Services\RequestHandlers\RequestHandlerInterface;
 use App\Services\RequestHandlers\TranscriptRequestHandler;
+use App\Services\RequestHandlers\SubmittedRequestHandler;
 
 class RequestHandlerFactory
 {
@@ -14,8 +15,8 @@ class RequestHandlerFactory
             case 'كشف علامات':
                 return new TranscriptRequestHandler();
 
-            // case 'إيقاف تسجيل':
-            //     return new StopEnrollmentHandler();
+            case 'وثيقة ترفع':
+                return new SubmittedRequestHandler();
 
             default:
                 throw new \Exception("لا يوجد معالج لهذا النوع من الوثائق");

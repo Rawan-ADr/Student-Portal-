@@ -55,6 +55,7 @@ public function getStudentCourses()
    else{
     $message="courses get successful";
     $code=200;
+    $this->markRepository->checkPromotionStatus($id);
     return ['courses'=>StudentCourseResource::collection($courses),'message'=>$message,'code'=>$code];
  }
 
