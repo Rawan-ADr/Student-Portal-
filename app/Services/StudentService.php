@@ -408,15 +408,17 @@ class StudentService{
     public function addSchedule($request){
         $Schedule=$this->scheduleRepository->add($request);
         if(!$Schedule){
-            $Schedule=null;
-            $message="error...";
+            $message="يوجد تضارب في الجدول مع محاضرة أخرى في نفس اليوم والسنة والفصل";
             $code=404;
+            return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
+
         }
+        else{
         $message="Lecture Time add successfully";
         $code=200; 
 
         return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
-
+        }
     }
 
     

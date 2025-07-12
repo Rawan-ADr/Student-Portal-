@@ -16,7 +16,7 @@ class DataRequestResource extends JsonResource
     {
         return [
             'document_name' => $this->document->name,
-            'document_content' => $this->document->content,
+            //'document_content' => $this->document->content,
             'date' => $this->date,
             'fields' => $this->fieldValues->map(function ($value) {
                 return [

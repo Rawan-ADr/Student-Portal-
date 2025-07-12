@@ -55,7 +55,7 @@ class SubmittedRequestHandler implements RequestHandlerInterface
         // استبدال المتغيرات بالمحتوى
         $finalContent = strtr($contentTemplate, $replacements);
     
-        // حفظ النتيجة في الطلب (يفضل إضافة عمود جديد مثل filled_content)
+       //////
         $document->content = $finalContent;
         $document->save();
 

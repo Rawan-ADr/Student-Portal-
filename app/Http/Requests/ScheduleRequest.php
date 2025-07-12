@@ -29,6 +29,7 @@ class ScheduleRequest extends FormRequest
             'year_id' => 'required|exists:years,id',
             'course_id' => 'required|exists:courses,id',
             'day_id' => 'required|exists:days,id',
+            'doctor_name' => 'nullable|string|max:255'
         ];
     }
 }
