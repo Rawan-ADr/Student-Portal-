@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique;
-            $table->longText('content');
+            $table->foreignId('workflow_id')->constrained('workflows')->nullable()->constrained()->nullOnDelete();
+            $table->longText('content')->nullable();
             $table->timestamps();
         });
     }

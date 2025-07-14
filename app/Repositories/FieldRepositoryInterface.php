@@ -25,6 +25,10 @@ use App\Models\Field;
     public function all();
 
     public function addFieldValue($request,$Request);
+
+    public function getByName(string $name);
+
+    public function updateOrCreate($requestId, $fieldId, $value);
 }
     
 

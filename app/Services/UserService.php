@@ -36,6 +36,17 @@ class UserService
             else{
                 
                 $user['token']=$user->createToken("token")->plainTextToken;
+                     $role = $user->roles()->first(); 
+
+            if ($role) {
+                $user['role'] = [
+                    'id' => $role->id,
+                    'name' => $role->name
+                ];
+            } else {
+                $user['role'] = null; 
+            }
+
                 $message=" logged in successfully ";
                 $code=200;
             }
@@ -120,6 +131,43 @@ class UserService
         }
         return ['result'=> null,'message'=>'you can not do this!'];
 
+    }
+
+    public function indexUsers(){
+        if ( Auth::user()->hasRole('admin')) {
+
+            $result = $this->userRepository->all();
+            if(!is_null($result)){
+                return ['users'=> $result,'message'=>'users indexed successfully'];
+            }
+            return ['users'=> null,'message'=>'users not found'];
+
+        }
+        return ['users'=> null,'message'=>'you can not do this!'];
+    }
+
+    public function indexUserByToken(){
+         $user = $this->userRepository->getAuthenticatedUser();
+
+    if ($user) {
+        $role = $user->roles()->first(); 
+
+        $userData = $user->toArray();
+        $userData['role'] = $role ? [
+            'id' => $role->id,
+            'name' => $role->name
+        ] : null;
+
+        return [
+            'user' => $userData,
+            'message' => 'User retrieved successfully'
+        ];
+    }
+
+    return [
+        'user' => null,
+        'message' => 'User not authenticated'
+    ];
     }
     }
 

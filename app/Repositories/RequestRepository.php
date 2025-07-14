@@ -2,7 +2,8 @@
 namespace App\Repositories;
 use App\Models\Request;
 use App\Models\FlowStep;
-use App\Models\Document_Workflow;
+use App\Models\Document;
+use App\Models\Group;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\Factories\RequestHandlerFactory;
@@ -16,16 +17,19 @@ class RequestRepository implements RequestRepositoryInterface
        $this->RequestHandlerFactory = $RequestHandlerFactory;
     }
     public function getReceivedRequest($id){
-        return Request::where('student_id', $id)->where('status', 'done')->get() ;
+        return Request::where('student_id', $id)->where('status', 'done')->get()
+        ->makeHidden(['content_value']);
 
     }
     public function getRequests($id){
-        return Request::where('student_id', $id)->where('status','!=', 'done')->get() ;
+        return Request::where('student_id', $id)->where('status','!=', 'done')->get() 
+        ->makeHidden(['content_value']);
 
     }
 
     public function getModRequest($id){
-        return Request::where('student_id', $id)->where('status', 'required modification')->get() ;
+        return Request::where('student_id', $id)->where('status', 'required modification')->get()
+        ->makeHidden(['content_value']);
 
     }
 
@@ -42,7 +46,7 @@ class RequestRepository implements RequestRepositoryInterface
         }
         else
         {
-            $workflow = Document_Workflow::where('document_id', $document_id)->first();
+            $workflow = Document::find($document_id);
             $firstStep = FlowStep::where('workflow_id', $workflow->workflow_id)
             ->orderBy('step_order', 'asc')
             ->first();
@@ -97,7 +101,7 @@ class RequestRepository implements RequestRepositoryInterface
 
     }
 
-    public function getExamRequests(){
+    /*public function getExamRequests(){
 
         $roleId = auth()->user()->roles->first()->id;
 
@@ -112,7 +116,36 @@ class RequestRepository implements RequestRepositoryInterface
 
         return $requests ;
 
+    *///}
+
+    public function getExamRequests()
+{
+    $user = auth()->user();
+    $roleId = $user->roles->first()->id;
+
+    $flowStepIds = FlowStep::where('role_id', $roleId)->pluck('id');
+
+    $query = Request::whereIn('point', $flowStepIds)
+        ->where('status', '!=', 'rejected')
+        ->with(['document', 'student']);
+
+    // إذا كان المستخدم أستاذ عملي، نفلتر فقط على طلابه
+    if ($user->employee && $user->employee->professor) {
+        $professorId = $user->employee->professor->id;
+
+        // نحصل على المجموعات التي يدرّسها هذا الأستاذ
+        $groupIds = \App\Models\Group::where('professor_id', $professorId)->pluck('id');
+
+        // نحصل على الطلاب المنضمين لهذه المجموعات عبر group_enrollments
+        $studentIds = \App\Models\GroupEnrollment::whereIn('group_id', $groupIds)
+            ->pluck('student_id');
+
+        // نفلتر الطلبات فقط على هؤلاء الطلاب
+        $query->whereIn('student_id', $studentIds);
     }
+
+    return $query->get();
+}
 
 
     public function getRequestData($id){
@@ -132,25 +165,25 @@ class RequestRepository implements RequestRepositoryInterface
 
         $studentRequest = Request::find($requestId);
         $currentStep = FlowStep::find($studentRequest->point);
+        if($currentStep->is_final)
+           {
+            $studentRequest->update([
+                'point' => "end",
+                'status'=>"done"
+            ]);
+            return null;
+           }
         $nextStep = FlowStep::where('workflow_id', $currentStep->workflow_id)
         ->where('step_order', '>', $currentStep->step_order)
         ->orderBy('step_order', 'asc')
         ->first();
 
         if ($nextStep) {
-           if($nextStep->is_final)
-           {
-            $studentRequest->update([
-                'point' => "end",
-                'status'=>"done"
-            ]);
-           }
-           else
-           {
+           
             $studentRequest->update([
                 'point' => $nextStep->id
                 ]);
-            }
+           
             return $nextStep->step_name ;
         }
        return null;

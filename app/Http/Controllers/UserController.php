@@ -109,7 +109,35 @@ class UserController extends Controller
         }
 
         }
+         public function indexUsers(){
+             $data=[];
+       try{
+         $data=$this->userService->indexUsers();
+         return Response::Success($data['users'],$data['message']) ;
+        }
 
+      catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+        }
+
+
+        }
+
+        public function indexUserByToken(){
+          $data=[];
+       try{
+         $data=$this->userService->indexUserByToken();
+         return Response::Success($data['user'],$data['message']) ;
+        }
+
+      catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+        }
+        }
         
 
     

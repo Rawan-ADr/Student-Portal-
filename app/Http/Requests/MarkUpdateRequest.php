@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmployeeRequest extends FormRequest
+class MarkUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +14,6 @@ class EmployeeRequest extends FormRequest
         return true;
     }
 
-    
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,16 +21,10 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        
-        $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:6',
-        'phone' => 'required|string|max:20',
-        'department_id' => 'required|exists:departments,id',
-        'type' => 'required|in:normal,practical',
-    ];
-    return $rules;
-        
+          return [
+            'request_id' => 'required|exists:requests,id',
+            'mark' => 'sometimes|nullable|min:0|max:100',
+            'justification' => 'required|string|min:5|max:1000',
+        ];
     }
 }

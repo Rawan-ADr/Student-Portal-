@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\AffairsController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('index/permission', [UserController::class, 'indexPermissions']);
     Route::post('assignPermissions/toRole', [UserController::class, 'assignPermissions']);
     Route::post('assignRole/toUser', [UserController::class, 'assignRole']);
+    Route::get('index/users', [UserController::class, 'indexUsers']);
+    Route::get('index/user/by/token', [UserController::class, 'indexUserByToken']);
    
 
 
@@ -63,7 +66,7 @@ Route::prefix('document')->group(function () {
    Route::post('create/workflow',[DocumentController::class,'createWorkflow']);
    Route::post('update/workflow/{workflow_id}',[DocumentController::class,'updateWorkflow']);
    Route::get('ShowAllWorkflows',[DocumentController::class,'ShowAllWorkflows']);
-   Route::get('index/Workflow/{workflow_id}',[DocumentController::class,'indexWorkflow']);
+   Route::get('index/Workflow/{document_id}',[DocumentController::class,'indexWorkflow']);
    Route::get('delete/Workflow/{workflow_id}',[DocumentController::class,'deleteWorkflow']);
    Route::post('assign/workflow/to/document',[DocumentController::class,'assignWorkflowToDocument']);
    // Route::get('index',[GroupController::class,'index'])
@@ -72,7 +75,7 @@ Route::prefix('document')->group(function () {
 });
 
 Route::prefix('student')->group(function () {
-    Route::get('ShowAllDocuments',[DocumentController::class,'ShowAllDocuments']);
+    Route::get('ShowDocuments',[DocumentController::class,'ShowDocuments']);
     Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
     Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
     Route::get('getModRequest/{id}',[StudentController::class,'getModRequest']);
@@ -107,6 +110,10 @@ Route::prefix('else')->group(function () {
     Route::post('addAnnouncement',[StudentController::class,'addAnnouncement']);
     Route::post('updateAnnouncement/{id}',[StudentController::class,'updateAnnouncement']);
     Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement']);
+});
+Route::prefix('prof')->group(function () {
+    Route::post('add/result/practical/exam/objection',[RequestController::class,'updatePracticalMark']); 
+    
 });
 
 Route::prefix('Affairs')->group(function () {

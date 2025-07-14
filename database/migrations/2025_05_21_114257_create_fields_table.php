@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('fields', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            table->enum('processing_by', ['student', 'operation']);
             $table->foreignId('field_type_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

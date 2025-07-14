@@ -11,7 +11,8 @@ class Field extends Model
 
     protected $fillable = [
         'name',
-        'field_type_id'
+        'field_type_id',
+        'processing_by'
       
     ];
 

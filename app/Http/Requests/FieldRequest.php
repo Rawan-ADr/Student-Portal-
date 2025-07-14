@@ -24,6 +24,7 @@ class FieldRequest extends FormRequest
         return [
             'fields' => 'required|array',
             'fields.*.name' => 'required|string',
+            'fields.*.processing_by'=>'required|in:student,operation',
             'fields.*.field_type_id' => 'required|exists:field_types,id',
             'fields.*.validation_ids' => 'array',
         ];

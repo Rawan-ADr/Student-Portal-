@@ -44,5 +44,15 @@ class Student   extends Authenticatable
         return $this->hasMany(StudentRecord::class);
     }
 
+    public function groupEnrollments()
+    {
+         return $this->hasMany(GroupEnrollment::class);
+    }
+
+    public function groups()
+    {
+       return $this->belongsToMany(Group::class, 'group_enrollments');
+    }
+
 
 }

@@ -11,6 +11,7 @@ interface DocumentRepositoryInterface
     public function all();
     public function findall($id);
     public function findWithRelations($id);
+    public function indexDocumentWithWorkflow($id);
     
     
 

@@ -23,12 +23,12 @@ class documentRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'content'=>'required',
+            'content'=>'nullable',
             'field_ids' => 'required|array',
             'field_ids.*' => 'integer|exists:fields,id',
-            'attachment_ids' => 'required|array',
+            'attachment_ids' => 'nullable|array',
             'attachment_ids.*' => 'integer|exists:attachments,id',
-            'condition_ids' => 'required|array',
+            'condition_ids' => 'nullable|array',
             'condition_ids.*' => 'integer|exists:conditions,id',
         ];
     }

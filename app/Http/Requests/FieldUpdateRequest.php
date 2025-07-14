@@ -24,6 +24,7 @@ class FieldUpdateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'field_type_id' => 'required|exists:field_types,id',
+            'processing_by'=>'required|in:student,operation',
             'validation_ids' => 'sometimes|array',
             'validation_ids.*' => 'exists:validations,id',
         ];

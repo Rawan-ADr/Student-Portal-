@@ -30,7 +30,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
         if ($data['type'] === 'practical') {
              Professor::create([
               'employee_id' => $employee->id,
-              'is_practical' => $data['is_practical'] ??false ,
             ]);
          }
          return $employee;
@@ -68,7 +67,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
         if ($data['type'] === 'practical') {
             Professor::updateOrCreate(
                 ['employee_id' => $employee->id],
-                ['is_practical' => $data['is_practical'] ?? false]
             );
         } else {
           
@@ -95,11 +93,12 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     {
        $employees = Employee::with(['user', 'professor'])->get()->map(function ($employee) {
     return [
+        'id' => $employee->id,
         'name' => $employee->user->name,
         'email' => $employee->user->email,
         'phone' => $employee->phone,
         'department_id' => $employee->department_id,
-        'is_practical' => optional($employee->professor)->is_practical, 
+         
     ];
 });
      return $employees;

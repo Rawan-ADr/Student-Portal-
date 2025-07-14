@@ -326,18 +326,56 @@ class StudentService{
 
 //////////////////////////
 
-    public function addLecture($request){
-        $lecture =$this->lectureRepository->add($request);
-        if(!$lecture){
-            $lecture=null;
-            $message="error...";
-            $code=404;
-        }
-        $message="lecture add successfully";
-        $code=200; 
+    public function addLecture($request)
+{
+    $user = auth()->user();
 
-        return ['lecture'=>$lecture,'message'=>$message,'code'=>$code];
+    // التحقق من أن المستخدم يملك دور "professor"
+    if (!$user->hasRole('professor')) {
+        return [
+            'lecture' => null,
+            'message' => 'Access denied. Only professors can add lectures.',
+            'code' => 403
+        ];
     }
+    $employee = $user->employee;
+        $professor = $employee ? $employee->professor : null;
+
+        if (!$professor) {
+            return [
+                'lecture' => null,
+                'message' => 'Professor profile not found.',
+                'code' => 404,
+            ];
+        }
+
+        $courseId = $request->input('course_id');
+
+        //  التحقق من ارتباطه بالمادة
+        if (!$this->lectureRepository->professorTeachesCourse($professor->id, $courseId)) {
+            return [
+                'lecture' => null,
+                'message' => 'You are not assigned to this course.',
+                'code' => 403,
+            ];
+        }
+
+    $lecture = $this->lectureRepository->add($request);
+
+    if (!$lecture) {
+        return [
+            'lecture' => null,
+            'message' => 'Error adding lecture.',
+            'code' => 404
+        ];
+    }
+
+    return [
+        'lecture' => $lecture,
+        'message' => 'Lecture added successfully.',
+        'code' => 200
+    ];
+}
 
 ///////////////
     public function addAnnouncement($request){

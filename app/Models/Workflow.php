@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Workflow extends Model
+
 {
     use HasFactory;
 
@@ -21,7 +22,7 @@ class Workflow extends Model
 
     public function document()
     {
-        return $this->belongsToMany(Document::class,'document__workflows');
+        return $this->hasMany(Document::class);
     }
 
 

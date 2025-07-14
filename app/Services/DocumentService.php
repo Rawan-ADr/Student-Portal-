@@ -344,6 +344,17 @@ class DocumentService
         
     }
 
+    public function ShowDocuments(){
+        $documents=$this->documentRepository->all();
+        if (is_null($documents)) {
+            
+            return ["documents" => null, "message" => " no documents."];
+        }
+        else{
+            return ["documents" => $documents, "message" => " this is all documents."];
+        }
+    }
+
     public function indexDocument($document_id){
 
         if (!Auth::user()->hasRole('admin')) {
@@ -374,7 +385,8 @@ class DocumentService
             $this->workflowRepository->addSteps($workflow, $request['steps']);
 
             $document = $this->documentRepository->find($request['document_id']);
-            $document->workflow()->attach($workflow->id);
+            $document->workflow_id = $workflow->id;
+            $document->save();
 
             return ["workflow" => $workflow, "message" => " workflow added for these document successfully."];
 
@@ -410,13 +422,13 @@ class DocumentService
         
     }
 
-    public function indexWorkflow($workflow_id){
+    public function indexWorkflow($document_id){
 
         if (!Auth::user()->hasRole('admin')) {
             return ['workflow'=>null,'message' => 'you cant see workflow'];
           }
 
-        $workflow = $this->workflowRepository->find($workflow_id);
+        $workflow = $this->documentRepository->indexDocumentWithWorkflow($document_id);
         if (is_null($workflow)) {
             
             return ["workflow" => null, "message" => " no workflows."];

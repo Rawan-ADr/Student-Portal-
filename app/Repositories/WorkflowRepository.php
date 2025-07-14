@@ -98,7 +98,8 @@ class WorkflowRepository implements WorkflowRepositoryInterface
     public function assignWorkflow(array $data){
 
          $document = Document::findOrFail($data['document_id']);
-         $document->workflow()->syncWithoutDetaching($data['workflow_id']); 
+         $document->workflow_id = $data['workflow_id'];
+         $document->save();
          return true;
 
     }

@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Year;
 use App\Models\Semester;
 use App\Models\Announcement;
+use \App\Models\Group;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -160,6 +161,14 @@ use Illuminate\Support\Facades\Storage;
         });
 
         return $Announcements;
+    }
+
+     public function professorTeachesCourse($professorId, $courseId): bool
+    {
+        // هل الأستاذ مرتبط بمقرر ما من خلال مجموعة؟
+        return Group::where('professor_id', $professorId)
+            ->where('course_id', $courseId)
+            ->exists();
     }
 
 

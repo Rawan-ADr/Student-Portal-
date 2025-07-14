@@ -298,6 +298,21 @@ class DocumentController extends Controller
         }
     }
 
+    public function ShowDocuments(){
+        $data=[];
+        try{
+    
+           $data=$this->documentService->ShowDocuments();
+           return Response::Success($data['documents'],$data['message']) ;}
+    
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+    }
+
     public function indexDocument($document_id){
 
         $data=[];
@@ -364,11 +379,11 @@ class DocumentController extends Controller
         }
     }
 
-     public function indexWorkflow($workflow_id){
+     public function indexWorkflow($document_id){
         $data=[];
         try{
     
-           $data=$this->documentService->indexWorkflow($workflow_id);
+           $data=$this->documentService->indexWorkflow($document_id);
            return Response::Success($data['workflow'],$data['message']) ;}
     
 

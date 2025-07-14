@@ -20,12 +20,17 @@ class DocumentRepository implements DocumentRepositoryInterface
    
     $document = Document::create([
         'name' => $data['name'],
-        'content' => $data['content'],
+        'content' => $data['content'] ?? null, 
     ]);
 
     $document->fields()->syncWithoutDetaching($data['field_ids']);
+   if (!empty($data['attachment_ids'])) {
     $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
+    }
+
+    if (!empty($data['condition_ids'])) {
     $document->condition()->syncWithoutDetaching($data['condition_ids']);
+    }
 
     return [
         'document' => $document->name,
@@ -58,12 +63,17 @@ class DocumentRepository implements DocumentRepositoryInterface
         if ($document) {
             $document->update([
                   'name' => $data['name'],
-                 'content' => $data['content'],
+                 'content' => $data['content'] ?? null, 
 
             ]);
             $document->fields()->syncWithoutDetaching($data['field_ids']);
-            $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
-            $document->condition()->syncWithoutDetaching($data['condition_ids']);
+            if (!empty($data['attachment_ids'])) {
+                $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
+            }
+
+            if (!empty($data['condition_ids'])) {
+                 $document->condition()->syncWithoutDetaching($data['condition_ids']);
+            }
         return $document->name;
         }
         return null;
@@ -98,6 +108,7 @@ class DocumentRepository implements DocumentRepositoryInterface
     {
         return Document::with(['fields' => function ($query) {
             $query->select('fields.id', 'fields.name', 'fields.field_type_id') 
+                 ->where('processing_by', 'student')
                 ->with([
                     'fieldType:id,type', 
                     'validation:id,validation_rule'
@@ -105,6 +116,20 @@ class DocumentRepository implements DocumentRepositoryInterface
         }, 'attachments:id,name,description'])
         ->select('documents.id', 'documents.name') 
         ->find($id);
+    }
+    public function indexDocumentWithWorkflow($id){
+         $document = Document::select('id', 'workflow_id')
+        ->with(['workflow' => function ($query) {
+            $query->with('flowStep'); 
+        }])
+        ->find($id);
+
+    if (!$document || !$document->workflow) {
+        return null;
+    }
+
+    
+    return $document;
     }
 
     

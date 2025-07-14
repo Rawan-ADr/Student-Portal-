@@ -11,6 +11,7 @@ class Document extends Model
 
     protected $fillable = [
         'name',
+        'workflow_id',
         'content'
       
     ];
@@ -32,7 +33,7 @@ class Document extends Model
 
     public function workflow()
     {
-        return $this->belongsToMany(Workflow::class,'document__workflows');
+        return $this->belongsTo(Workflow::class);
     }
 
 

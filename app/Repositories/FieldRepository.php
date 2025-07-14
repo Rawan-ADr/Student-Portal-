@@ -10,6 +10,7 @@ class FieldRepository implements FieldRepositoryInterface
         return Field::create([
             'name' => $data['name'],
             'field_type_id' => $data['field_type_id'],
+            'processing_by'=> $data['processing_by'],
         ]);
     }
 
@@ -47,6 +48,7 @@ class FieldRepository implements FieldRepositoryInterface
         $field->update([
            'name' => $data['name'],
            'field_type_id' => $data['field_type_id'],
+           'processing_by'=> $data['processing_by'],
         ]);
 
         return $field;
@@ -92,5 +94,18 @@ class FieldRepository implements FieldRepositoryInterface
         return "done";
 
 
+    }
+
+     public function getByName(string $name)
+    {
+        return Field::where('name', $name)->firstOrFail();
+    }
+
+     public function updateOrCreate($requestId, $fieldId, $value)
+    {
+        return FieldValue::updateOrCreate(
+            ['request_id' => $requestId, 'field_id' => $fieldId],
+            ['value' => $value]
+        );
     }
 }

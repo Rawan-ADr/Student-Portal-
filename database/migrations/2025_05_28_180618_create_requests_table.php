@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('date');
             $table->enum('status',['under review','required modification','in process','done','rejected']);
             $table->string('point');
+            $table->longText('content_value');
             $table->string('modifications')->nullable();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('document_id')->constrained('documents')->cascadeOnDelete()->cascadeOnUpdate();

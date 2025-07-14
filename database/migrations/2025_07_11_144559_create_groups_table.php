@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('document__workflows', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('document_id')->constrained('documents')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('workflow_id')->constrained('workflows')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('professor_id')->constrained('professors')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->unsignedInteger('group_number');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('document__workflows');
+        Schema::dropIfExists('groups');
     }
 };

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('professors', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_practical')->nullable()->default(false);
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

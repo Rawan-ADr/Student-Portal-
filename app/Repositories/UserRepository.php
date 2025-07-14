@@ -7,7 +7,21 @@ class UserRepository implements UserRepositoryInterface
 {
     public function all()
     {
-        return User::all();
+        $users = User::whereDoesntHave('roles', function ($query) {
+        $query->where('name', 'admin');
+    })
+    ->with(['employee:id,user_id,department_id']) 
+    ->get()
+    ->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'department_id' => optional($user->employee)->department_id,
+        ];
+    });
+
+    return $users;
     }
 
     public function find($id)
@@ -64,6 +78,10 @@ class UserRepository implements UserRepositoryInterface
 
 
     }
+    public function getAuthenticatedUser()
+{
+    return auth()->user(); // أو: return Auth::user();
+}
 
     
 

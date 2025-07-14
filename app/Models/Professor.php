@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Professor extends Model
 {
     use HasFactory;
-    protected $casts = [
-    'is_practical' => 'boolean',
-];
 
     protected $fillable = [
-        'is_practical',
          'employee_id'
       
     ];
@@ -21,5 +17,10 @@ class Professor extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+     public function group()
+    {
+        return $this->hasMany(Group::class);
     }
 }
