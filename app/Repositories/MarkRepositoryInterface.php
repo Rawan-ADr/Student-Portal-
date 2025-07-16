@@ -9,4 +9,5 @@ namespace App\Repositories;
 {
     public function getCourses($id);
     public function getMarks($studentId,$courseId); 
+    public function TheoreticalMark($courseRecordId, $newMark): void;
 }

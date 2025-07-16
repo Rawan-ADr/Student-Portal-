@@ -16,11 +16,26 @@ class RequestController extends Controller
        $this->requestService = $requestService;
     }
 
-    public function updatePracticalMark(MarkUpdateRequest $request): JsonResponse
+    public function updatePracticalMark(MarkUpdateRequest $request)
     {
          $data=[];
      try{
         $data= $this->requestService->updateMarkAndJustification($request->validated());
+         return Response::Success($data['data'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+    }
+
+      public function updateTheoreticalMark(MarkUpdateRequest $request)
+    {
+        $data=[];
+     try{
+        $data= $this->requestService->updateTheoreticalMark($request->validated());
          return Response::Success($data['data'],$data['message']) ;
      }
 

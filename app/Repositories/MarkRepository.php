@@ -76,4 +76,24 @@ function checkPromotionStatus($studentId)
     return $promoted ? 'Student promoted' : 'Student not promoted';
 }
 
+    public function TheoreticalMark($courseRecordId, $newMark): void
+    {
+        $mark = Mark::where('course_record_id', $courseRecordId)->first();
+
+        if ($mark) {
+              if (!is_null($newMark)) {
+            $mark->theoretical_mark = $newMark;
+        }
+
+        // احسب المجموع بناءً على القيم الحالية
+        $theoretical = $mark->theoretical_mark ?? 0;
+        $practical = $mark->practical_mark ?? 0;
+
+        $mark->total_mark = $theoretical + $practical;
+        $mark->status = $mark->total_mark >= 50 ? 'pass' : 'fail';
+
+        $mark->save();
+    }
+}
+
 }

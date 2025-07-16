@@ -116,6 +116,11 @@ Route::prefix('prof')->group(function () {
     
 });
 
+Route::prefix('committee')->group(function () {
+    Route::post('add/result/theoretical/exam/objection',[RequestController::class,'updateTheoreticalMark']); 
+    
+});
+
 Route::prefix('Affairs')->group(function () {
     Route::post('addStudent',[AffairsController::class,'addStudent']);
     Route::post('addStudentRecord',[AffairsController::class,'addStudentRecord']);

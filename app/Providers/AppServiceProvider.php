@@ -35,6 +35,9 @@ use App\Repositories\WorkflowRepositoryInterface;
 use App\Repositories\WorkflowRepository;
 use App\Repositories\MarkRepositoryInterface;
 use App\Repositories\MarkRepository;
+use App\Repositories\CourseRecordRepositoryInterface;
+use App\Repositories\CourseRecordRepository;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -60,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(WorkflowRepositoryInterface::class, WorkflowRepository::class);
         $this->app->bind(MarkRepositoryInterface::class, MarkRepository::class);
+         $this->app->bind(CourseRecordRepositoryInterface::class, CourseRecordRepository::class);
     }
 
     /**

@@ -306,4 +306,18 @@ class RequestRepository implements RequestRepositoryInterface
             return ['passed' => true];
     }
 
+      public function find($id)
+    {
+        return Request::findOrFail($id);
+    }
+
+    public function getCourseNameFromRequest($requestId): ?string
+    {
+        return \DB::table('field_values')
+            ->join('fields', 'field_values.field_id', '=', 'fields.id')
+            ->where('field_values.request_id', $requestId)
+            ->where('fields.name', 'like', '%اسم%المادة%') // مرن حسب الكلمات المفتاحية
+            ->value('field_values.value');
+    }
+
 }
