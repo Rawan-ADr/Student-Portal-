@@ -86,5 +86,26 @@ class StudentRepository implements StudentRepositoryInterface
           return StudentRecordCollectionResource::collection($records);
     }
 
+     public function updateWallet($id, float $amount)
+    {
+        $student = Student::findOrFail($id);
+        $student->wallet += $amount;
+        $student->save();
+
+        return $student->wallet;
+    }
+
+    public function deductWallet($id, $amount)
+   {
+    $student = Student::findOrFail($id);
+
+    if ($student->wallet < $amount) {
+        throw new \Exception('Insufficient wallet balance', 402);
+    }
+
+    $student->wallet -= $amount;
+    $student->save();
+  }
+
 
 }

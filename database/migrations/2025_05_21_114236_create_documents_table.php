@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique;
             $table->foreignId('workflow_id')->constrained('workflows')->nullable()->constrained()->nullOnDelete();
             $table->longText('content')->nullable();
+             $table->decimal('fee', 8, 2)->default(0.00); 
             $table->timestamps();
         });
     }

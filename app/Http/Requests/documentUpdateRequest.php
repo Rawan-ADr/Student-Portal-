@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class documentRequest extends FormRequest
+class documentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,11 +21,11 @@ class documentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|string',
+         return [
+            'name' => 'nullable|string',
             'content'=>'nullable',
-            'fee' => 'required|numeric|min:0',
-            'field_ids' => 'required|array',
+            'fee' => 'nullable|numeric|min:0',
+            'field_ids' => 'nullable|array',
             'field_ids.*' => 'integer|exists:fields,id',
             'attachment_ids' => 'nullable|array',
             'attachment_ids.*' => 'integer|exists:attachments,id',

@@ -30,9 +30,6 @@ class SpecialRequestHandler implements RequestHandlerInterface
         $request->content_value = $finalContent;
         $request->save();
 
-
-        dd($finalContent);
-
         return $request;
     }
 }

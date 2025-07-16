@@ -21,6 +21,7 @@ class DocumentRepository implements DocumentRepositoryInterface
     $document = Document::create([
         'name' => $data['name'],
         'content' => $data['content'] ?? null, 
+        'fee' => $data['fee'] ?? 0.00,
     ]);
 
     $document->fields()->syncWithoutDetaching($data['field_ids']);
@@ -59,14 +60,29 @@ class DocumentRepository implements DocumentRepositoryInterface
 
     public function update(array $data, $id)
     {
-        $document = Document::findOrFail($id);
+         $document = Document::findOrFail($id);
         if ($document) {
-            $document->update([
-                  'name' => $data['name'],
-                 'content' => $data['content'] ?? null, 
+           $updateData = [];
 
-            ]);
-            $document->fields()->syncWithoutDetaching($data['field_ids']);
+           if (array_key_exists('name', $data)) {
+           $updateData['name'] = $data['name'];
+           }
+
+           if (array_key_exists('content', $data)) {
+            $updateData['content'] = $data['content'];
+            }
+
+           if (array_key_exists('fee', $data)) {
+            $updateData['fee'] = $data['fee'];
+           }
+
+           if (!empty($updateData)) {
+             $document->update($updateData);
+           }
+
+           if (!empty($data['field_ids'])) {
+             $document->fields()->syncWithoutDetaching($data['field_ids']);
+            }
             if (!empty($data['attachment_ids'])) {
                 $document->attachments()->syncWithoutDetaching($data['attachment_ids']);
             }

@@ -61,8 +61,6 @@ class SubmittedRequestHandler implements RequestHandlerInterface
         $request->save();
 
 
-        dd($finalContent);
-
         return $request;
     }
 

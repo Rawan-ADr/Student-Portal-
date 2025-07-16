@@ -9,5 +9,7 @@ interface StudentRepositoryInterface{
     public function createStudentRecord($request);
     public function addNotes($request,$id);
     public function getStudentRecords($id);
+    public function updateWallet($id, float $amount);
+    public function deductWallet($id, $amount);
     
 }

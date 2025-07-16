@@ -31,6 +31,7 @@ return new class extends Migration
             $table->enum('acceptance',['general','parallel']);
             $table->date('date_of_secondarySchool_cretificate');
             $table->integer('total_grades');
+            $table->decimal('wallet', 10, 2)->default(0);
             $table->string('department')->nullable();
             $table->timestamps();
         });

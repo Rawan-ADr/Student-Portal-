@@ -10,6 +10,7 @@ use App\Http\Requests\RequestRequest;
 use App\Http\Requests\StudentLoginRequest;
 use App\Http\Requests\StudentRecordRequest;
 use App\Http\Requests\ScheduleRequest;
+use App\Http\Requests\TopUpWalletRequest;
 
 class StudentController extends Controller
 {
@@ -392,6 +393,21 @@ class StudentController extends Controller
         }
 
     }
+
+     public function topUpWallet(TopUpWalletRequest $request){
+         $data=[];
+        try{
+            $data=$this->studentService->topUpWallet($request->validated());
+            return Response::Success($data['wallet'],$data['message']) ;
+        }
+
+        catch (Throwable $th){
+            $message=$th->getmessage();
+            return Response::Error($data,$message);
+
+        }
+
+     }
 
 
 }

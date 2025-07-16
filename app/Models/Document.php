@@ -12,7 +12,8 @@ class Document extends Model
     protected $fillable = [
         'name',
         'workflow_id',
-        'content'
+        'content',
+        'fee'
       
     ];
 

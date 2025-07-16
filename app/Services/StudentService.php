@@ -15,6 +15,7 @@ use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\ScheduleRepositoryInterface;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\RequestResource;
+use Illuminate\Support\Facades\DB;
                      
 
 class StudentService{
@@ -25,8 +26,8 @@ class StudentService{
     private  $attachmentRepository;
     private  $lectureRepository;
     private  $scheduleRepository;
+    private  $documentRepository;
     
-
     public function __construct(StudentRepositoryInterface $studentRepository,
                                  RequestRepositoryInterface $requestRepository,
                                  DocumentRepositoryInterface $documentRepository,
@@ -187,25 +188,60 @@ class StudentService{
     }
 
 
-    public function sendRequest($request,$document_id)
+    public function sendRequest($request, $document_id)
     {
-        $studentId=auth()->id();
-        $Request=$this->requestRepository->create($studentId,$document_id);
-        if($Request['code']==422){
-            return ['request'=>$Request['request'],'message'=>$Request['message'],'code'=>$Request['code']];
+       $studentId = auth()->id(); 
+       $student = $this->studentRepository->find($studentId);
 
-        }
-        else{
-        $idd=$Request['request'];
-        $fieldValue=$this->fieldRepository->addFieldValue($request,$idd);
-        $this->attachmentRepository->addAttachmentValue($request,$idd);
-        $message="The request has been sent ";
-        $code=200;
+       if (!$student) {
+        return ['request' => null, 'message' => 'Student not found', 'code' => 404];
+       }
 
-        return ['request'=>$Request['request'],'message'=>$Request['message'],'code'=>$Request['code']];
-        }
+       $document = $this->documentRepository->find($document_id);
+
+      if (!$document) {
+        return ['request' => null, 'message' => 'Document not found', 'code' => 404];
+      }
+
+        $fee = $document->fee;
+
+       if ($student->wallet < $fee) {
+          return ['request' => null, 'message' => 'Insufficient wallet balance', 'code' => 402];
+       }
+
+        DB::beginTransaction();
+
+       try {
+        // خصم الرسوم
+           $this->studentRepository->deductWallet($student->id, $fee);
+
+        // إنشاء الطلب
+           $Request = $this->requestRepository->create($student->id, $document_id);
+
+          if ($Request['code'] == 422) {
+              DB::rollBack();
+             return ['request' => $Request['request'], 'message' => $Request['message'], 
+             'code' => $Request['code']];
+           }
+
+           $idd = $Request['request'];
+
+        // إدخال الحقول والمرفقات
+           $this->fieldRepository->addFieldValue($request, $idd);
+           $this->attachmentRepository->addAttachmentValue($request, $idd);
+
+           DB::commit();
+
+           return [
+             'request' => $idd,
+             'message' => 'The request has been sent',
+             'code' => 200
+           ];
+        } catch (\Exception $e) {
+           DB::rollBack();
+           return ['request' => null, 'message' => 'An error occurred: ' . $e->getMessage(), 'code' => 500];
+       }
     }
-
     public function updateRequest($request,$request_id)
     {
         $studentId=auth()->id();
@@ -494,5 +530,18 @@ class StudentService{
         return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
 
     }
+
+     public function topUpWallet($request){
+
+        $studentId=auth()->id();
+           if (!$studentId) {
+             $message="student not found may be national_number is wrong";
+              return ['wallet'=>null,'message'=>$message];
+           }
+           $wallet = $this->studentRepository->updateWallet($studentId, $request['amount']);
+           $message="amount of money added successfully";
+              return ['wallet'=>$wallet,'message'=>$message];
+
+     }
    
 }

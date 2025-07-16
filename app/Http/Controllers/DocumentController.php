@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\documentRequest;
+use App\Http\Requests\documentUpdateRequest;
 use App\Http\Requests\FieldRequest;
 use App\Http\Requests\FieldUpdateRequest;
 use App\Http\Requests\DocumentFieldRequest;
@@ -40,7 +41,7 @@ class DocumentController extends Controller
         }
        
 }
-    public function update(documentRequest $request,$document_id){
+    public function update(documentUpdateRequest $request,$document_id){
         $data=[];
           try{
         

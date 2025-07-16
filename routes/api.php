@@ -92,6 +92,7 @@ Route::prefix('student')->group(function () {
     Route::post('getSchedule',[StudentController::class,'getSchedule']);
     Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
     Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
+    Route::post('addMoneyInwallet', [StudentController::class, 'topUpWallet']);
     
 
 });
