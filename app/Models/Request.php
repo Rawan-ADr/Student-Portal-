@@ -40,4 +40,9 @@ class Request extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function logs()
+{
+    return $this->hasMany(RequestLog::class);
+}
+
 }

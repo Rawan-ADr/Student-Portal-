@@ -10,7 +10,10 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\AffairsController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestController;
+use App\Models\Request as DocumentRequest;
+use Illuminate\Http\Request as HttpRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login',[UserController::class,'login']);
 Route::post('Login',[StudentController::class,'login']);
 
+/*Route::get('/payment/success', function (HttpRequest $request) {
+    $requestId = $request->query('request_id');
+
+    if (!is_numeric($requestId)) {
+        return response()->json(['message' => 'Invalid request ID.']);
+    }
+
+    $req = DocumentRequest::find($requestId);
+
+    if ($req && $req->payment_status !== 'paid') {
+        $req->payment_status = 'paid';
+        $req->save();
+    }
+
+    return response()->json(['message' => 'Payment successful and request marked as paid.']);
+*///});
+Route::get('/payment/success', function () {
+    return response()->json(['message' => 'Thank you! Payment successful.']);
+});
+
+Route::get('/payment/cancel', function () {
+    return response()->json(['message' => 'Payment cancelled.']);
+});
+
+Route::post('/payment/confirm', [PaymentController::class, 'confirm']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -41,6 +69,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('assignRole/toUser', [UserController::class, 'assignRole']);
     Route::get('index/users', [UserController::class, 'indexUsers']);
     Route::get('index/user/by/token', [UserController::class, 'indexUserByToken']);
+   // Route::post('/payment/create-session', [\App\Http\Controllers\StripeController::class, 'createSession']);
    
 
 
@@ -69,14 +98,13 @@ Route::prefix('document')->group(function () {
    Route::get('index/Workflow/{document_id}',[DocumentController::class,'indexWorkflow']);
    Route::get('delete/Workflow/{workflow_id}',[DocumentController::class,'deleteWorkflow']);
    Route::post('assign/workflow/to/document',[DocumentController::class,'assignWorkflowToDocument']);
-   // Route::get('index',[GroupController::class,'index'])
-   // ->middleware('can:group.index');
 
 });
 
 Route::prefix('student')->group(function () {
     Route::get('ShowDocuments',[DocumentController::class,'ShowDocuments']);
     Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
+    Route::get('getAllStudent',[StudentController::class,'getAllStudent']);
     Route::get('getReceivedRequest/{id}',[StudentController::class,'getReceivedRequest']);
     Route::get('getModRequest/{id}',[StudentController::class,'getModRequest']);
     Route::get('getRequests/{id}',[StudentController::class,'getRequests']);
@@ -92,7 +120,7 @@ Route::prefix('student')->group(function () {
     Route::post('getSchedule',[StudentController::class,'getSchedule']);
     Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
     Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
-    Route::post('addMoneyInwallet', [StudentController::class, 'topUpWallet']);
+    
     
 
 });
@@ -116,6 +144,10 @@ Route::prefix('prof')->group(function () {
     Route::post('add/result/practical/exam/objection',[RequestController::class,'updatePracticalMark']); 
     
 });
+Route::prefix('request')->group(function () {
+    Route::get('indexContent/{request_id}',[RequestController::class,'indexContent']); 
+    
+});
 
 Route::prefix('committee')->group(function () {
     Route::post('add/result/theoretical/exam/objection',[RequestController::class,'updateTheoreticalMark']); 
@@ -126,7 +158,9 @@ Route::prefix('Affairs')->group(function () {
     Route::post('addStudent',[AffairsController::class,'addStudent']);
     Route::post('addStudentRecord',[AffairsController::class,'addStudentRecord']);
     Route::post('addNotes/{id}',[AffairsController::class,'addNotes']);
+    Route::get('indexNotes',[AffairsController::class,'indexNotes']);
     Route::get('getStudentRecords/{id}',[AffairsController::class,'getStudentRecords']);
+    Route::get('indexStudentRecords',[AffairsController::class,'indexStudentRecords']);
     Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
 
 });

@@ -97,6 +97,23 @@ class StudentService{
 
     }
 
+    public function getAllStudent(){
+
+        $student=$this->studentRepository->all();
+        if(!is_null($student))
+        {
+            $message="students get successfully";
+        }
+
+        else
+        {
+            $message=" students not found ";
+    
+        }
+        
+        return ['students'=>$student,'message'=>$message];
+    }
+
     
     public function getReceivedRequest($id)
     {
@@ -190,57 +207,54 @@ class StudentService{
 
     public function sendRequest($request, $document_id)
     {
-       $studentId = auth()->id(); 
-       $student = $this->studentRepository->find($studentId);
+       $studentId = auth()->id();
+    $student = $this->studentRepository->find($studentId);
 
-       if (!$student) {
+    if (!$student) {
         return ['request' => null, 'message' => 'Student not found', 'code' => 404];
-       }
+    }
 
-       $document = $this->documentRepository->find($document_id);
-
-      if (!$document) {
+    $document = $this->documentRepository->find($document_id);
+    if (!$document) {
         return ['request' => null, 'message' => 'Document not found', 'code' => 404];
-      }
+    }
 
-        $fee = $document->fee;
+    $fee = $document->fee;
 
-       if ($student->wallet < $fee) {
-          return ['request' => null, 'message' => 'Insufficient wallet balance', 'code' => 402];
-       }
+    DB::beginTransaction();
+    try {
+        // إنشاء الطلب بحالة pending_payment
+        $Request = $this->requestRepository->create($studentId, $document_id);
 
-        DB::beginTransaction();
+        if ($Request['code'] == 422) {
+            DB::rollBack();
+            return ['request' => $Request['request'], 'message' => $Request['message'], 'code' => $Request['code']];
+        }
 
-       try {
-        // خصم الرسوم
-           $this->studentRepository->deductWallet($student->id, $fee);
-
-        // إنشاء الطلب
-           $Request = $this->requestRepository->create($student->id, $document_id);
-
-          if ($Request['code'] == 422) {
-              DB::rollBack();
-             return ['request' => $Request['request'], 'message' => $Request['message'], 
-             'code' => $Request['code']];
-           }
-
-           $idd = $Request['request'];
+        $idd = $Request['request'];
+        $id = $Request['request']->id;
+        
 
         // إدخال الحقول والمرفقات
-           $this->fieldRepository->addFieldValue($request, $idd);
-           $this->attachmentRepository->addAttachmentValue($request, $idd);
+        $this->fieldRepository->addFieldValue($request, $idd);
+        $this->attachmentRepository->addAttachmentValue($request, $idd);
 
-           DB::commit();
+        DB::commit();
 
-           return [
-             'request' => $idd,
-             'message' => 'The request has been sent',
-             'code' => 200
-           ];
-        } catch (\Exception $e) {
-           DB::rollBack();
-           return ['request' => null, 'message' => 'An error occurred: ' . $e->getMessage(), 'code' => 500];
-       }
+        // إنشاء جلسة Stripe
+        $session = app(\App\Services\StripeService::class)
+                        ->createCheckoutSession($fee, $studentId, $id);
+
+        return [
+            'request' => $idd,
+            'redirect_url' => $session->url,
+            'message' => 'Request created. Please complete the payment.',
+            'code' => 200
+        ];
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return ['request' => null, 'message' => 'An error occurred: ' . $e->getMessage(), 'code' => 500];
+    }
     }
     public function updateRequest($request,$request_id)
     {
@@ -531,17 +545,6 @@ class StudentService{
 
     }
 
-     public function topUpWallet($request){
-
-        $studentId=auth()->id();
-           if (!$studentId) {
-             $message="student not found may be national_number is wrong";
-              return ['wallet'=>null,'message'=>$message];
-           }
-           $wallet = $this->studentRepository->updateWallet($studentId, $request['amount']);
-           $message="amount of money added successfully";
-              return ['wallet'=>$wallet,'message'=>$message];
-
-     }
+     
    
 }

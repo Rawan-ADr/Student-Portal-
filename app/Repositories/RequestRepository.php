@@ -101,6 +101,12 @@ class RequestRepository implements RequestRepositoryInterface
 
     }
 
+        public function indexContent($id){
+         $request = Request::where('id', $id)->select('id', 'content_value')->first();
+        return $request;
+       }
+
+
     /*public function getExamRequests(){
 
         $roleId = auth()->user()->roles->first()->id;
@@ -127,6 +133,7 @@ class RequestRepository implements RequestRepositoryInterface
 
     $query = Request::whereIn('point', $flowStepIds)
         ->where('status', '!=', 'rejected')
+        ->where('payment_status', 'paid') 
         ->with(['document', 'student']);
 
     // إذا كان المستخدم أستاذ عملي، نفلتر فقط على طلابه
@@ -199,6 +206,8 @@ class RequestRepository implements RequestRepositoryInterface
 
             $handler =$this->RequestHandlerFactory->make($studentRequest->document);
             $result = $handler->handle($studentRequest);
+              $studentRequest->makeHidden(['content_value']);
+              $studentRequest->document->makeHidden(['content']);
                 return $studentRequest;
      }
         return null;
@@ -211,6 +220,8 @@ class RequestRepository implements RequestRepositoryInterface
            $studentRequest->update([
                'status'=>"rejected"
            ]);
+           $studentRequest->makeHidden(['content_value']);
+           $studentRequest->document->makeHidden(['content']);
            return $studentRequest;
         }
            return null;
@@ -224,6 +235,8 @@ class RequestRepository implements RequestRepositoryInterface
                'status'=>"required modification",
                'modifications'=>$request['modifications']
            ]);
+           $studentRequest->makeHidden(['content_value']);
+           $studentRequest->document->makeHidden(['content']);
            return $studentRequest;
         }
            return null;

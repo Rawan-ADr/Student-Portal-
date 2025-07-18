@@ -42,6 +42,20 @@ class AffairsService
 
     }
 
+    public function indexStudentRecords(){
+        
+        $studentRecord=$this->studentRepository->indexStudentRecords();
+        if(!$studentRecord){
+            $studentRecord=null;
+            $message="studendRecord not found";
+    }
+     
+        else{
+        $message="studentRecord indexed successfully";
+        }
+        return ['studentRecords'=>$studentRecord,'message'=>$message];
+    }
+
 
     public function addNotes($request,$id){
 
@@ -66,6 +80,23 @@ class AffairsService
         return ['studentRecord'=>$studentRecord,'message'=>$message,'code'=>$code];
 
     }
+
+     public function indexNotes(){
+         $notes=$this->studentRepository->indexNotes();
+        
+        if(is_null($notes))
+        {
+            $notes=null;
+            $message="notes not found";
+        }
+
+        else{
+        $message="Notes indexed successfully";
+        }
+
+        return ['notes'=>$notes,'message'=>$message];
+
+     }
 
     public function getStudentRecords($id){
         $studentRecord=$this->studentRepository->getStudentRecords($id);

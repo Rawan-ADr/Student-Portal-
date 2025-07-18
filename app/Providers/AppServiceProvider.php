@@ -37,6 +37,8 @@ use App\Repositories\MarkRepositoryInterface;
 use App\Repositories\MarkRepository;
 use App\Repositories\CourseRecordRepositoryInterface;
 use App\Repositories\CourseRecordRepository;
+use App\Models\Request;
+use App\Observers\RequestObserver;
 
 
 
@@ -71,6 +73,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+       Request::observe(RequestObserver::class);
     }
 }

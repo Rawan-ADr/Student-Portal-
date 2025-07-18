@@ -98,6 +98,25 @@ class RequestService
 
 
     }
+
+    public function indexContent($request_id){
+
+         $user = auth()->user();
+       if ($user->hasRole('deanship office')){
+                $request = $this->requestRepository->find($request_id);
+                if(is_null($request)){
+                     $message="request not found";
+                return ['request'=>null,'message'=>$message];
+                }
+               $content = $this->requestRepository->indexContent($request_id);
+               $message="request indexed successfully";
+              return ['request'=>$content,'message'=>$message];
+       }
+        else{
+        $message="you can not do this";
+        return ['request'=>null,'message'=>$message];
+    }
+    }
         
      }
 

@@ -29,7 +29,8 @@ class RolesPermissionsSeeder extends Seeder
             Permission::firstOrCreate(['name' => $perm,'guard_name' => 'web']);
         }
 
-        $roles = ['admin', 'professor', 'affairs_officer', 'exam_officer'];
+        $roles = ['admin', 'professor', 'affairs_officer', 'exam_officer','committee',
+    'student office','deanship office'];
 
         foreach ($roles as $role) {
             Role::firstOrCreate(['name' => $role]);

@@ -72,6 +72,21 @@ class AffairsController extends Controller
 
     }
 
+    public function indexStudentRecords(){
+        $data=[];
+     try{
+         $data=$this->AffairsService->indexStudentRecords();
+         return Response::Success($data['studentRecords'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
     public function addNotes(Request $request,$id)
     {
 
@@ -88,6 +103,20 @@ class AffairsController extends Controller
      }
 
 
+   }
+
+   public function indexNotes(){
+     $data=[];
+     try{
+         $data=$this->AffairsService->indexNotes();
+         return Response::Success($data['notes'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
    }
 
 

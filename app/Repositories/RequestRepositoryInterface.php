@@ -13,6 +13,6 @@ interface RequestRepositoryInterface{
     public function confirmReview($id);
     public function find($id);
     public function getCourseNameFromRequest($requestId): ?string;
-
+    public function indexContent($id);
 
 }

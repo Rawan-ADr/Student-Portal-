@@ -45,4 +45,18 @@ class RequestController extends Controller
 
      }
     }
+
+    public function indexContent($request_id){
+        $data=[];
+     try{
+        $data= $this->requestService->indexContent($request_id);
+         return Response::Success($data['request'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+    }
 }

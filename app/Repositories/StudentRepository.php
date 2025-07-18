@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Models\Student;
+use App\Models\StudentFile;
 use App\Models\StudentNote;
 use App\Models\Note;
 use App\Models\StudentRecord;
@@ -25,6 +26,12 @@ class StudentRepository implements StudentRepositoryInterface
         return Student::find($id);
     
     }
+
+     public function all(){
+        $student= Student::all()->select('id','name','lineage','mother_name',
+        'father_name','national_number');
+        return $student;
+     }
 
     public function createStudent($request){
 
@@ -78,6 +85,11 @@ class StudentRepository implements StudentRepositoryInterface
         return new StudentRecordResource($studentRecord);
     }
 
+    public function indexNotes(){
+        $note= Note::all();
+        return $note;
+    }
+
     public function getStudentRecords($id){
         $records = StudentRecord::with(['studentNotes.note', 'student', 'year'])
         ->where('student_id', $id)
@@ -86,26 +98,11 @@ class StudentRepository implements StudentRepositoryInterface
           return StudentRecordCollectionResource::collection($records);
     }
 
-     public function updateWallet($id, float $amount)
-    {
-        $student = Student::findOrFail($id);
-        $student->wallet += $amount;
-        $student->save();
-
-        return $student->wallet;
+    public function indexStudentRecords(){
+        $records = StudentRecord::with(['studentNotes.note', 'student', 'year'])->get();
+          return StudentRecordCollectionResource::collection($records);
     }
 
-    public function deductWallet($id, $amount)
-   {
-    $student = Student::findOrFail($id);
-
-    if ($student->wallet < $amount) {
-        throw new \Exception('Insufficient wallet balance', 402);
-    }
-
-    $student->wallet -= $amount;
-    $student->save();
-  }
 
 
 }

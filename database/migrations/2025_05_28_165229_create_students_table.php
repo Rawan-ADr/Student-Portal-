@@ -27,11 +27,10 @@ return new class extends Migration
             $table->string('temporary_address');
             $table->string('address');
             $table->string('secondary_school');
-            $table->enum('type',['scientific','vocational']);
-            $table->enum('acceptance',['general','parallel']);
+            $table->enum('type',['أدبي','علمي']);
+            $table->enum('acceptance',['عام','موازي']);
             $table->date('date_of_secondarySchool_cretificate');
             $table->integer('total_grades');
-            $table->decimal('wallet', 10, 2)->default(0);
             $table->string('department')->nullable();
             $table->timestamps();
         });

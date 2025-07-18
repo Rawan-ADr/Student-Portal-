@@ -10,7 +10,6 @@ use App\Http\Requests\RequestRequest;
 use App\Http\Requests\StudentLoginRequest;
 use App\Http\Requests\StudentRecordRequest;
 use App\Http\Requests\ScheduleRequest;
-use App\Http\Requests\TopUpWalletRequest;
 
 class StudentController extends Controller
 {
@@ -75,6 +74,20 @@ class StudentController extends Controller
 
      }
 
+    }
+
+    public function getAllStudent(){
+         $data=[];
+     try{
+         $data=$this->studentService->getAllStudent();
+         return Response::Success($data['students'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
     }
 
     public function getReceivedRequest($id)
@@ -170,7 +183,12 @@ class StudentController extends Controller
         $data=[];
      try{
          $data=$this->studentService->sendRequest($request,$document_id);
-         return Response::Success($data['request'],$data['message'],$data['code']) ;
+           return response()->json([
+            'request' => $data['request'],
+            'message' => $data['message'],
+            'code' => $data['code'],
+            'redirect_url' => $data['redirect_url'] ?? null, 
+        ], $data['code']);
      }
 
      catch (Throwable $th){
@@ -394,20 +412,7 @@ class StudentController extends Controller
 
     }
 
-     public function topUpWallet(TopUpWalletRequest $request){
-         $data=[];
-        try{
-            $data=$this->studentService->topUpWallet($request->validated());
-            return Response::Success($data['wallet'],$data['message']) ;
-        }
-
-        catch (Throwable $th){
-            $message=$th->getmessage();
-            return Response::Error($data,$message);
-
-        }
-
-     }
+     
 
 
 }
