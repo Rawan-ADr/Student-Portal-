@@ -59,4 +59,19 @@ class RequestController extends Controller
 
      }
     }
+
+
+    public function indexLogs(){
+          $data=[];
+     try{
+        $data= $this->requestService->indexLogs();
+         return Response::Success($data['requestLogs'],$data['message']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+    }
 }

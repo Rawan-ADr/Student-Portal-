@@ -3,6 +3,7 @@
 
 namespace App\Services;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 use App\Repositories\FieldRepositoryInterface;
 use App\Repositories\RequestRepositoryInterface;
 use App\Repositories\MarkRepositoryInterface;
@@ -117,8 +118,26 @@ class RequestService
         return ['request'=>null,'message'=>$message];
     }
     }
+
+    public function indexLogs(){
+        if ( Auth::user()->hasRole('admin')) {
+            $requestLogs = $this->requestRepository->indexLogs();
+                if(is_null($requestLogs)){
+                     $message="requestLogs not found";
+                return ['requestLogs'=>null,'message'=>$message];
+                }
+               $message="requestLogs indexed successfully";
+              return ['requestLogs'=>$requestLogs,'message'=>$message];
+       }
+        else{
+        $message="you can not do this";
+        return ['request'=>null,'message'=>$message];
+    }
+
+        }
+    }
         
-     }
+     
 
 
 

@@ -21,6 +21,12 @@ class RequestHandlerFactory
             case 'طلب خاص':
                 return new SpecialRequestHandler();
 
+            case'طلب اعتراض على درجة امتحان عملي';
+                return new PracticalObjectionRequestHandler();
+            
+            case'طلب اعتراض على درجة امتحان نظري';
+                return new TheoriticalObjectionRequestHandler();
+
             default:
                 throw new \Exception("لا يوجد معالج لهذا النوع من الوثائق");
         }

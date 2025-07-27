@@ -4,6 +4,7 @@ use App\Models\Request;
 use App\Models\FlowStep;
 use App\Models\Document;
 use App\Models\Group;
+use App\Models\RequestLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\Factories\RequestHandlerFactory;
@@ -331,6 +332,26 @@ class RequestRepository implements RequestRepositoryInterface
             ->where('field_values.request_id', $requestId)
             ->where('fields.name', 'like', '%اسم%المادة%') // مرن حسب الكلمات المفتاحية
             ->value('field_values.value');
+    }
+
+    public function indexLogs(){
+         $logs = RequestLog::with([
+        'request:id,id,student_id',
+        'user:id,id,name'
+    ])->get();
+
+    return $logs->map(function ($log) {
+        return [
+            'id' => $log->id,
+            'request_id'=>$log->request_id,
+            'action' => $log->action,
+            'note' => $log->note,
+            'created_at' => $log->created_at,
+            'student_id' => $log->request->student_id ?? null,
+            'user_id' => $log->user->id ?? null,
+            'user_name' => $log->user->name ?? null,
+        ];
+    });
     }
 
 }

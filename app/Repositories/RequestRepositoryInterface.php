@@ -14,5 +14,6 @@ interface RequestRepositoryInterface{
     public function find($id);
     public function getCourseNameFromRequest($requestId): ?string;
     public function indexContent($id);
+    public function indexLogs();
 
 }

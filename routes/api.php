@@ -71,7 +71,10 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('index/user/by/token', [UserController::class, 'indexUserByToken']);
    // Route::post('/payment/create-session', [\App\Http\Controllers\StripeController::class, 'createSession']);
    
-
+Route::prefix('admin')->group(function () {
+    Route::get('show/logs',[RequestController::class,'indexLogs']); 
+    
+});
 
 Route::prefix('document')->group(function () {
     Route::post('create',[DocumentController::class,'create']);
