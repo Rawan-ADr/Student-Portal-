@@ -21,6 +21,7 @@ class SubmittedRequestHandler implements RequestHandlerInterface
         $semester_cycle=Semester::find( $studentFile->semester_id);
         
 
+        
         $fieldData = [
             'الاختصاص' => $student->department,
             'الرقم الجامعي' => $student->university_number,

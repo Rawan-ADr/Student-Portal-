@@ -69,12 +69,21 @@ function checkPromotionStatus($studentId)
             $studentFile->academic_year = Carbon::now();
             $studentFile->status = "promoted";
         }
+        else{
+            $studentFile->year_id = $nextYear->id;
+            $studentFile->semester_id = $currentSemester->id;
+            $studentFile->academic_year = Carbon::now();
+            $studentFile->status = "Graduated";
+        }
     }
 
     $studentFile->save();
 
     return $promoted ? 'Student promoted' : 'Student not promoted';
 }
+
+
+
 
     public function TheoreticalMark($courseRecordId, $newMark): void
     {

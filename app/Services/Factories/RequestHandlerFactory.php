@@ -7,6 +7,7 @@ use App\Services\RequestHandlers\RequestHandlerInterface;
 use App\Services\RequestHandlers\TranscriptRequestHandler;
 use App\Services\RequestHandlers\SubmittedRequestHandler;
 use App\Services\RequestHandlers\SpecialRequestHandler;
+use App\Services\RequestHandlers\GraduationNoticeHandler;
 
 class RequestHandlerFactory
 {
@@ -20,6 +21,8 @@ class RequestHandlerFactory
                 return new SubmittedRequestHandler();
             case 'طلب خاص':
                 return new SpecialRequestHandler();
+            case 'اشعار تخرج':
+                return new GraduationNoticeHandler();
 
             case'طلب اعتراض على درجة امتحان عملي';
                 return new PracticalObjectionRequestHandler();

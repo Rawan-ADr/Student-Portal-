@@ -15,6 +15,7 @@ use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\ScheduleRepositoryInterface;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\RequestResource;
+use App\Http\Resources\AllReqResource;
 use Illuminate\Support\Facades\DB;
                      
 
@@ -133,7 +134,7 @@ class StudentService{
     
         }
         
-        return ['requests'=>$requests,'message'=>$message,'code'=>$code];
+        return ['requests'=>AllReqResource::collection($requests),'message'=>$message,'code'=>$code];
 
     }
 
@@ -155,7 +156,7 @@ class StudentService{
     
         }
         
-        return ['requests'=>$requests,'message'=>$message,'code'=>$code];
+        return ['requests'=>AllReqResource::collection($requests),'message'=>$message,'code'=>$code];
 
     }
 
@@ -177,7 +178,7 @@ class StudentService{
     
         }
         
-        return ['requests'=>$requests,'message'=>$message,'code'=>$code];
+        return ['requests'=>AllReqResource::collection($requests),'message'=>$message,'code'=>$code];
 
     }
 
