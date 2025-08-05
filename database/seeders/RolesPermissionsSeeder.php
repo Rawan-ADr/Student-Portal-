@@ -19,9 +19,24 @@ class RolesPermissionsSeeder extends Seeder
     {
            $permissions = [
             'view requests',
-            'create documents',
             'approve requests',
             'reject requests',
+            'view requests data',
+            'import marks',
+            'add student',
+            'add student record',
+            'add notes',
+            'get student records',
+            'get student',
+            'index notes',
+            'index all records',
+            'index students',
+            'confirm review',
+            'request modification',
+            'add announcement',
+            'update announcement',
+            'delete announcement',
+
             
         ];
 

@@ -37,6 +37,9 @@ use App\Repositories\MarkRepositoryInterface;
 use App\Repositories\MarkRepository;
 use App\Repositories\CourseRecordRepositoryInterface;
 use App\Repositories\CourseRecordRepository;
+use App\Repositories\ReportRepositoryInterface;
+use App\Repositories\ReportRepository;
+
 use App\Models\Request;
 use App\Observers\RequestObserver;
 
@@ -65,7 +68,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(WorkflowRepositoryInterface::class, WorkflowRepository::class);
         $this->app->bind(MarkRepositoryInterface::class, MarkRepository::class);
-         $this->app->bind(CourseRecordRepositoryInterface::class, CourseRecordRepository::class);
+        $this->app->bind(CourseRecordRepositoryInterface::class, CourseRecordRepository::class);
+        $this->app->bind(ReportRepositoryInterface::class, ReportRepository::class);
+
     }
 
     /**

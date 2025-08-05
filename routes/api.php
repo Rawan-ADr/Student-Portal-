@@ -12,6 +12,7 @@ use App\Http\Controllers\AffairsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\ReportController;
 use App\Models\Request as DocumentRequest;
 use Illuminate\Http\Request as HttpRequest;
 
@@ -33,22 +34,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login',[UserController::class,'login']);
 Route::post('Login',[StudentController::class,'login']);
 
-/*Route::get('/payment/success', function (HttpRequest $request) {
-    $requestId = $request->query('request_id');
-
-    if (!is_numeric($requestId)) {
-        return response()->json(['message' => 'Invalid request ID.']);
-    }
-
-    $req = DocumentRequest::find($requestId);
-
-    if ($req && $req->payment_status !== 'paid') {
-        $req->payment_status = 'paid';
-        $req->save();
-    }
-
-    return response()->json(['message' => 'Payment successful and request marked as paid.']);
-*///});
 Route::get('/payment/success', function () {
     return response()->json(['message' => 'Thank you! Payment successful.']);
 });
@@ -69,10 +54,13 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('assignRole/toUser', [UserController::class, 'assignRole']);
     Route::get('index/users', [UserController::class, 'indexUsers']);
     Route::get('index/user/by/token', [UserController::class, 'indexUserByToken']);
-   // Route::post('/payment/create-session', [\App\Http\Controllers\StripeController::class, 'createSession']);
    
 Route::prefix('admin')->group(function () {
     Route::get('show/logs',[RequestController::class,'indexLogs']); 
+    Route::get('reports/top-employees', [ReportController::class, 'topEmployeesByActions']);
+    Route::get('reports/request-count-documents', [ReportController::class, 'requestCountPerDocument']);
+    Route::get('reports/processing-time', [ReportController::class, 'averageProcessingTimePerDocument']);
+    Route::get('reports/status-count', [ReportController::class, 'requestCountByStatus']);
     
 });
 
@@ -129,19 +117,26 @@ Route::prefix('student')->group(function () {
 });
 
 Route::prefix('exam')->group(function () {
-    Route::post('importMarks',[ExaminationController::class,'importMarks']);
-    Route::get('getRequests',[ExaminationController::class,'getExamRequests']);
-    Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests']);
-    Route::get('getRequestData/{id}',[ExaminationController::class,'getRequestData']);
+    Route::post('importMarks',[ExaminationController::class,'importMarks'])
+    ->middleware('permission:import marks');
+    Route::get('getRequests',[ExaminationController::class,'getExamRequests'])
+    ->middleware('permission:view requests');
+    Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests'])
+    ->middleware('permission:approve requests');
+    Route::get('getRequestData/{id}',[ExaminationController::class,'getRequestData'])
+    ->middleware('permission:view requests data');
 });
 
 
 Route::prefix('else')->group(function () {
     Route::post('addSchedule',[StudentController::class,'addSchedule']); 
     Route::post('addLecture',[StudentController::class,'addLecture']);
-    Route::post('addAnnouncement',[StudentController::class,'addAnnouncement']);
-    Route::post('updateAnnouncement/{id}',[StudentController::class,'updateAnnouncement']);
-    Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement']);
+    Route::post('addAnnouncement',[StudentController::class,'addAnnouncement'])
+     ->middleware('permission:add announcement');
+    Route::post('updateAnnouncement/{id}',[StudentController::class,'updateAnnouncement'])
+     ->middleware('permission:update announcement');
+    Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement'])
+     ->middleware('permission:delete announcement');
 });
 Route::prefix('prof')->group(function () {
     Route::post('add/result/practical/exam/objection',[RequestController::class,'updatePracticalMark']); 
@@ -158,20 +153,30 @@ Route::prefix('committee')->group(function () {
 });
 
 Route::prefix('Affairs')->group(function () {
-    Route::post('addStudent',[AffairsController::class,'addStudent']);
-    Route::post('addStudentRecord',[AffairsController::class,'addStudentRecord']);
-    Route::post('addNotes/{id}',[AffairsController::class,'addNotes']);
-    Route::get('indexNotes',[AffairsController::class,'indexNotes']);
-    Route::get('getStudentRecords/{id}',[AffairsController::class,'getStudentRecords']);
-    Route::get('indexStudentRecords',[AffairsController::class,'indexStudentRecords']);
-    Route::get('getStudent/{id}',[StudentController::class,'getStudent']);
+    Route::post('addStudent',[AffairsController::class,'addStudent'])
+    ->middleware('permission:add student');
+    Route::post('addStudentRecord',[AffairsController::class,'addStudentRecord'])
+    ->middleware('permission:add student record');
+    Route::post('addNotes/{id}',[AffairsController::class,'addNotes'])
+    ->middleware('permission:add notes');
+    Route::get('indexNotes',[AffairsController::class,'indexNotes'])
+    ->middleware('permission:index notes');
+    Route::get('getStudentRecords/{id}',[AffairsController::class,'getStudentRecords'])
+    ->middleware('permission:get student records');
+    Route::get('indexStudentRecords',[AffairsController::class,'indexStudentRecords'])
+    ->middleware('permission:index all records');
+    Route::get('getStudent/{id}',[StudentController::class,'getStudent'])
+    ->middleware('permission:get student');
 
 });
 
 Route::prefix('Review')->group(function () {
-    Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview']);
-    Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest']);
-    Route::post('requestModification/{id}',[ReviewController::class,'requestModification']);
+    Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview'])
+    ->middleware('permission:confirm review');
+    Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest'])
+    ->middleware('permission:reject requests');
+    Route::post('requestModification/{id}',[ReviewController::class,'requestModification'])
+    ->middleware('permission:request modification');
 
  });
 
