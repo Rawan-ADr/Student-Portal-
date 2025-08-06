@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('year_id')->constrained('years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('academic_year');
-            $table->enum('status', ['new','promoted', 'Graduated','failed']);
+            $table->enum('status', ['مستجد','مترفع', 'متخرج','راسب']);
             $table->timestamps();
         });
     }

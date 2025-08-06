@@ -28,17 +28,15 @@ class ExaminationService
      }
 
 
- public function importMarks($request)
-{
-  
-    Excel::import(new StudentMarksImport, $request['file']);
-   
-    $message="تم استيراد الملف  بنجاح ";
-    $code=200; 
-
-
-    return ['data'=>' ','message'=>$message,'code'=>$code];
-}
+     public function importMarks($request)
+     {
+         Excel::import(new StudentMarksImport($this->markRepository), $request['file']);
+     
+         $message = "تم استيراد الملف بنجاح";
+         $code = 200;
+     
+         return ['data' => '', 'message' => $message, 'code' => $code];
+     }
 
 
 
@@ -55,8 +53,8 @@ public function getStudentCourses()
    else{
     $message="courses get successful";
     $code=200;
-    $this->markRepository->checkPromotionStatus($id);
-    return ['courses'=>StudentCourseResource::collection($courses),'message'=>$message,'code'=>$code];
+//
+    return ['courses'=>$courses,'message'=>$message,'code'=>$code];
  }
 
 

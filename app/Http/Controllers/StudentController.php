@@ -376,6 +376,25 @@ class StudentController extends Controller
 
 
     }
+    public function getAnnouncementByUserId()
+    {
+
+        $data=[];
+     try{
+         $data=$this->studentService->getAnnouncementByUserId();
+         return Response::Success($data['Announcement'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    
+
+
+    }
  //////..........
 
     public function addSchedule(ScheduleRequest $request)

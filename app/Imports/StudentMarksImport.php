@@ -11,10 +11,18 @@ use App\Models\Mark;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use App\Repositories\MarkRepositoryInterface;
 
 class StudentMarksImport implements OnEachRow, WithHeadingRow
 {
-    public function onRow(Row $row)
+   
+    private  $markRepository;
+
+
+    public function __construct(MarkRepositoryInterface $markRepository){
+        $this->markRepository = $markRepository;
+        
+     } public function onRow(Row $row)
     {
         $row = $row->toArray();
 
@@ -36,8 +44,10 @@ class StudentMarksImport implements OnEachRow, WithHeadingRow
                 'practical_mark' => $row['practical_mark'],
                 'theoretical_mark' => $row['theoretical_mark'],
                 'total_mark' => $row['total_mark'],
-                'status' => $row['total_mark'] >= 50 ? 'pass' : 'fail', // تعديل حسب نظامك
+                'status' => $row['total_mark'] >= 60 ? 'pass' : 'fail', // تعديل حسب نظامك
             ]);
+
+            $this->markRepository->checkPromotionStatus($student->id);
         }
     }
 }

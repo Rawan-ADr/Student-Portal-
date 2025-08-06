@@ -18,18 +18,18 @@ class RequestRepository implements RequestRepositoryInterface
        $this->RequestHandlerFactory = $RequestHandlerFactory;
     }
     public function getReceivedRequest($id){
-        return Request::where('student_id', $id)->where('status', 'done')->get()
+        return Request::where('student_id', $id)->where('status', 'done')->Latest()->get()
         ->makeHidden(['content_value']);
 
     }
     public function getRequests($id){
-        return Request::where('student_id', $id)->where('status','!=', 'done')->get() 
-        ->makeHidden(['content_value']);
+        return Request::where('student_id', $id)->where('status','!=', 'done')->Latest()
+        ->get()->makeHidden(['content_value']);
 
     }
 
     public function getModRequest($id){
-        return Request::where('student_id', $id)->where('status', 'required modification')->get()
+        return Request::where('student_id', $id)->where('status', 'required modification')->Latest()->get()
         ->makeHidden(['content_value']);
 
     }

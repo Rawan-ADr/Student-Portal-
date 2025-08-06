@@ -23,7 +23,8 @@ class StudentRepository implements StudentRepositoryInterface
     public function find($id)
     {
     
-        return Student::find($id);
+        return Student::find($id)->with('studentFile') 
+        ->first();
     
     }
 
@@ -57,7 +58,7 @@ class StudentRepository implements StudentRepositoryInterface
             'year_id' => 1,
             'academic_year' => now()->year,
             'student_id' => $request['student_id'],
-            'status' => "new",
+            'status' => "مستجد",
         ]);
         return $studentRecord;
     }

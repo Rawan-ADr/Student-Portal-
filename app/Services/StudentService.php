@@ -445,6 +445,12 @@ class StudentService{
     ///////////////
     public function updateAnnouncement($request,$id){
         $Announcement =$this->lectureRepository->updateAnnouncement($request,$id);
+        if($Announcement==0){
+            $Announcement=null;
+            $message="you can not do it";
+            $code=403;  
+        }
+        else{
         if(!$Announcement){
             $Announcement=null;
             $message="not found";
@@ -453,13 +459,19 @@ class StudentService{
         else{
         $message="Announcement updated successfully";
         $code=200; }
-
+        }
         return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
     }
 
     ///////////////
     public function deleteAnnouncement($id){
         $Announcement =$this->lectureRepository->deleteAnnouncement($id);
+        if($Announcement==0){
+            $Announcement=null;
+            $message="you can not do it";
+            $code=403;  
+        }
+        else{
         if(!$Announcement){
             $Announcement=null;
             $message="not found";
@@ -468,15 +480,35 @@ class StudentService{
         else{
         $message="Announcement deleted successfully";
         $code=200; }
-
+        }
         return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
     }
 
 
     
+    
     public function getAnnouncement()
     {
         $Announcement=$this->lectureRepository->getAnnouncement();
+        if(!$Announcement->isEmpty()){
+            $message="This is all Announcement";
+            $code=200;   
+        }
+
+        else {
+            $Announcement=null;
+            $message="not found";
+            $code=404;
+        }
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+
+
+
+    }
+    public function getAnnouncementByUserId()
+    {
+        $Announcement=$this->lectureRepository->getAnnouncementByUserId();
         if(!$Announcement->isEmpty()){
             $message="This is all Announcement";
             $code=200;   
@@ -517,9 +549,9 @@ class StudentService{
             'semester_id' => 'required|exists:semesters,id',
         ]);
         $schedule=$this->scheduleRepository->get($request);
-        if(!$schedule){
+        if($schedule->isEmpty()){
             $Schedule=null;
-            $message="error...";
+            $message="schedule not found";
             $code=404;
         }
         else{

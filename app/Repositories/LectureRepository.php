@@ -7,8 +7,10 @@ use App\Models\Year;
 use App\Models\Semester;
 use App\Models\Announcement;
 use \App\Models\Group;
+use \App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 
     class LectureRepository implements LectureRepositoryInterface
@@ -94,11 +96,12 @@ use Illuminate\Support\Facades\Storage;
         $value = $request->file('value');
         $fileName = time() . '_' . $value->getClientOriginalName(); 
         $filePath = $value->storeAs('Announcement', $fileName, 'public');
-    
+        $user_id=Auth::id();
         
         $Announcement = Announcement::create([
             'description' => $request['description'],
             'value' => $filePath,
+            'user_id'=>$user_id
             
         ]);
 
@@ -110,26 +113,33 @@ use Illuminate\Support\Facades\Storage;
     {
         $announcement = Announcement::find($id);
 
+        $user=Auth::id();
+        if($announcement->user_id===$user){
         
-        if ($announcement&&Storage::disk('public')->exists($announcement->value)) {
-            Storage::disk('public')->delete($announcement->value);
-            $announcement->delete();
-            return true;
+            if ($announcement&&Storage::disk('public')->exists($announcement->value)) {
+                Storage::disk('public')->delete($announcement->value);
+                $announcement->delete();
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-    
-       return false;
-        
-
+        else{
+            return 0; 
+        }
      }
 
      public function updateAnnouncement($request,$id)
      {
          $announcement = Announcement::find($id);
+         $user=Auth::id();
+         if($announcement->user_id===$user){
  
          
          if (!$announcement) {
 
-            return false;
+            return null;
          }
          Storage::disk('public')->delete($announcement->value);
      
@@ -142,10 +152,11 @@ use Illuminate\Support\Facades\Storage;
             'value' => $filePath,
             
         ]);
+        return true;}
+        else{
+            return 0; 
+        }
 
-        return true;
-         
- 
       }
 
     public function getAnnouncement(){
@@ -153,6 +164,21 @@ use Illuminate\Support\Facades\Storage;
 
         $Announcements=Announcement::latest()->get();
 
+       
+
+        $Announcements->transform(function ($Announcement) {
+            $Announcement->file_url = url('storage/' . $Announcement->value);
+           return $Announcement;
+        });
+
+        return $Announcements;
+    }
+    public function getAnnouncementByUserId(){
+       
+
+        $user_id=Auth::id();
+
+        $Announcements=Announcement::where('user_id',$user_id)->latest()->get();;
        
 
         $Announcements->transform(function ($Announcement) {

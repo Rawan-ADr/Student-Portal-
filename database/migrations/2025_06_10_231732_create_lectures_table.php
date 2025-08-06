@@ -15,11 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->date('date');
-            $table->enum('specialization',['Softwar Engineering',
-                                           'Artificial Intelligence',
-                                           'Computer Networks',
-                                           'Genaral']);
-            $table->enum('type',['Theoretical','Parctical']);
+            $table->enum('specialization',['برمجيات','ذكا صنعي','شبكات','عام']);
+            $table->enum('type',['نظري ','عملي ']);
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('path');
             $table->timestamps();

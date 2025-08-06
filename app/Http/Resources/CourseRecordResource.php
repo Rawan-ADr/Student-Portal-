@@ -15,7 +15,8 @@ class CourseRecordResource extends JsonResource
             'practical_mark' => $this->mark->practical_mark,
             'theoretical_mark' => $this->mark->theoretical_mark,
             'total_mark' => $this->mark->total_mark,
-            'status' => $this->mark->status, 
+            'status' => $this->mark->status,
+            'course_name'=>$this->course->name, 
         ];
     }
 }

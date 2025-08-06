@@ -11,7 +11,13 @@ class Announcement extends Model
     protected $fillable = [
         'value',
         'description',
+        'user_id'
        
       
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

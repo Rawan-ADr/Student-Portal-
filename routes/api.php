@@ -111,6 +111,7 @@ Route::prefix('student')->group(function () {
     Route::post('getSchedule',[StudentController::class,'getSchedule']);
     Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
     Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
+    Route::get('getAnnouncementByUserId',[StudentController::class,'getAnnouncementByUserId']);
     
     
 
@@ -118,7 +119,7 @@ Route::prefix('student')->group(function () {
 
 Route::prefix('exam')->group(function () {
     Route::post('importMarks',[ExaminationController::class,'importMarks'])
-    ->middleware('permission:import marks');
+   ;
     Route::get('getRequests',[ExaminationController::class,'getExamRequests'])
     ->middleware('permission:view requests');
     Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests'])
@@ -132,7 +133,7 @@ Route::prefix('else')->group(function () {
     Route::post('addSchedule',[StudentController::class,'addSchedule']); 
     Route::post('addLecture',[StudentController::class,'addLecture']);
     Route::post('addAnnouncement',[StudentController::class,'addAnnouncement'])
-     ->middleware('permission:add announcement');
+    ->middleware('permission:add announcement');
     Route::post('updateAnnouncement/{id}',[StudentController::class,'updateAnnouncement'])
      ->middleware('permission:update announcement');
     Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement'])

@@ -12,13 +12,51 @@ use Illuminate\Support\Facades\DB;
 class MarkRepository implements MarkRepositoryInterface
 {
 
-    public function getCourses($id){
-
-        return    $courses = CourseRecord::where('student_id', $id)
-                            ->with('course') 
-                            ->get()
-                            ->unique('course_id') 
-                            ->values();
+    public function getCourses($studentId){
+       
+            // جلب سجلات الطالب مع المادة والعلامة (hasOne)
+            $courseRecords = CourseRecord::where('student_id', $studentId)
+                ->with(['course', 'mark'])->Latest()
+                ->get();
+        
+            // تجميع حسب المادة
+            $grouped = $courseRecords->groupBy('course_id');
+        
+            $result = [];
+        
+            foreach ($grouped as $courseId => $attempts) {
+                $courseName = $attempts->first()->course->name ?? 'غير معروف';
+        
+                $attemptData = [];
+        
+                foreach ($attempts as $attempt) {
+                    $mark = $attempt->mark;
+        
+                    $attemptData[] = [
+                        'attempt_id' => $attempt->id,
+                        'semester' => $attempt->semester_id,
+                        'exam_date' => $attempt->exam_date,
+                        'mark' => $mark ? [
+                            'practical_mark' => $mark->practical_mark,
+                            'theoretical_mark' => $mark->theoretical_mark,
+                            'total_mark' => $mark->total_mark,
+                            'status' => $mark->status,
+                        ] : null,
+                    ];
+                }
+        
+                $result[] = [
+                    'course_id' => $courseId,
+                    'course_name' => $courseName,
+                    'attempts' => $attemptData,
+                ];
+            }
+        
+            return $result;
+        
+        
+        
+        
     }
     
     public function getMarks($studentId,$courseId){
@@ -66,16 +104,23 @@ function checkPromotionStatus($studentId)
         if ($nextYear) {
             $studentFile->year_id = $nextYear->id;
             $studentFile->semester_id = $currentSemester->id;
-            $studentFile->academic_year = Carbon::now();
-            $studentFile->status = "promoted";
+            $studentFile->academic_year = Carbon::now()->year;
+            $studentFile->status = "مترفع";
         }
         else{
-            $studentFile->year_id = $nextYear->id;
+            $studentFile->year_id = $studentFile->year_id;
             $studentFile->semester_id = $currentSemester->id;
-            $studentFile->academic_year = Carbon::now();
-            $studentFile->status = "Graduated";
+            $studentFile->academic_year = Carbon::now()->year;
+            $studentFile->status = "متخرج";
         }
     }
+    else{
+        $studentFile->year_id = $studentFile->year_id;
+        $studentFile->semester_id = $currentSemester->id;
+        $studentFile->academic_year = Carbon::now()->year;
+        $studentFile->status = "راسب";
+    }
+    
 
     $studentFile->save();
 

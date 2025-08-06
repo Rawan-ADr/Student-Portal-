@@ -43,6 +43,10 @@ class Student   extends Authenticatable
     {
         return $this->hasMany(StudentRecord::class);
     }
+    public function studentFile()
+    {
+        return $this->hasOne(StudentFile::class);
+    }
 
     public function groupEnrollments()
     {
