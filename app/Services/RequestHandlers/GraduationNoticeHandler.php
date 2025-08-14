@@ -20,7 +20,7 @@ class GraduationNoticeHandler implements RequestHandlerInterface
         $student = Student::find($studentId);
         $studentFile = StudentFile::where('student_id', $studentId)->first();
         $semester_cycle=Semester::find( $studentFile->semester_id);
-        if($studentFile->status!=='Graduated'){
+        if($studentFile->status!=='متخرج'){
             $request-> status='rejected';
             $request->save();
             return $request;
@@ -68,26 +68,26 @@ class GraduationNoticeHandler implements RequestHandlerInterface
 
 
 
-        // $fieldValues = FieldValue::where('request_id', $request->id)->with('field')->get();
-        // $document=Document::find(  $request->document_id);;
+        $fieldValues = FieldValue::where('request_id', $request->id)->with('field')->get();
+        $document=Document::find(  $request->document_id);;
 
-        // // تجهيز مصفوفة القيم للاستبدال
-        // $replacements = [
+        // تجهيز مصفوفة القيم للاستبدال
+        $replacements = [
 
-        // ];
-        // $contentTemplate = $document->content;
+        ];
+        $contentTemplate = $document->content;
 
-        // foreach ($fieldValues as $fieldValue) {
-        //     $replacements['{{' . $fieldValue->field->name . '}}'] = $fieldValue->value;
-        // }
+        foreach ($fieldValues as $fieldValue) {
+            $replacements['{{' . $fieldValue->field->name . '}}'] = $fieldValue->value;
+        }
     
-        // // استبدال المتغيرات بالمحتوى
-        // $finalContent = strtr($contentTemplate, $replacements);
+        // استبدال المتغيرات بالمحتوى
+        $finalContent = strtr($contentTemplate, $replacements);
     
 
-        // // حفظ النتيجة في الطلب (يفضل إضافة عمود جديد مثل filled_content)
-        // $request->content_value = $finalContent;
-        // $request->save();
+        // حفظ النتيجة في الطلب (يفضل إضافة عمود جديد مثل filled_content)
+        $request->content_value = $finalContent;
+        $request->save();
 
         return $request;
     }

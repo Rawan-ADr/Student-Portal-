@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('request_id')->constrained('requests')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('field_id')->constrained('fields')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('value');
+            $table->LongText('value');
             $table->timestamps();
         });
     }

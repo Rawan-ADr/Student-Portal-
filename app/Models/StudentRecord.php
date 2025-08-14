@@ -25,6 +25,10 @@ class StudentRecord extends Model
     {
         return $this->hasMany(StudentNote::class);
     }
+            public function notes()
+        {
+            return $this->belongsToMany(Note::class, 'student_notes', 'student_record_id', 'notes_id');
+        }
 
     public function year()
     {

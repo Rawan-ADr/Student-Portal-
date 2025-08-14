@@ -173,7 +173,7 @@ Route::prefix('Affairs')->group(function () {
 
 Route::prefix('Review')->group(function () {
     Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview'])
-    ->middleware('permission:confirm review');
+   ;
     Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest'])
     ->middleware('permission:reject requests');
     Route::post('requestModification/{id}',[ReviewController::class,'requestModification'])

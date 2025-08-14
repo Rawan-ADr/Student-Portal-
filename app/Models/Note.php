@@ -12,4 +12,9 @@ class Note extends Model
         'name'
        
     ];
+
+    public function studentRecords()
+{
+    return $this->belongsToMany(StudentRecord::class, 'student_notes');
+}
 }

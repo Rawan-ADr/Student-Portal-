@@ -8,6 +8,7 @@ use App\Services\RequestHandlers\TranscriptRequestHandler;
 use App\Services\RequestHandlers\SubmittedRequestHandler;
 use App\Services\RequestHandlers\SpecialRequestHandler;
 use App\Services\RequestHandlers\GraduationNoticeHandler;
+use App\Services\RequestHandlers\UniversityLifeHandler;
 
 class RequestHandlerFactory
 {
@@ -23,6 +24,8 @@ class RequestHandlerFactory
                 return new SpecialRequestHandler();
             case 'اشعار تخرج':
                 return new GraduationNoticeHandler();
+            case 'حياة جامعية':
+                return new UniversityLifeHandler();
 
             case'طلب اعتراض على درجة امتحان عملي';
                 return new PracticalObjectionRequestHandler();
