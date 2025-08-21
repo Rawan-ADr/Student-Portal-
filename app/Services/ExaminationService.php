@@ -128,10 +128,15 @@ public function getExamRequests()
         $step=$this->requestRepository->passingRequests($id);
         if($step)
         {
-
+            if($step== 'done'){
+                 $message="request completed successfully";
+                $code=200;
+            }
+            else{
 
             $message="request move to the next step successfully";
             $code=200;
+            }
         }
 
         else

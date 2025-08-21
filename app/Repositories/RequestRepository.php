@@ -179,7 +179,7 @@ class RequestRepository implements RequestRepositoryInterface
                 'point' => "end",
                 'status'=>"done"
             ]);
-            return null;
+            return $studentRequest->status;
            }
         $nextStep = FlowStep::where('workflow_id', $currentStep->workflow_id)
         ->where('step_order', '>', $currentStep->step_order)
@@ -352,6 +352,24 @@ class RequestRepository implements RequestRepositoryInterface
             'user_name' => $log->user->name ?? null,
         ];
     });
+    }
+
+    public function getNameForRequest($id){
+        $request = Request::findOrFail($id);
+        $documentName = $request->document->name;
+        return  $documentName;
+
+    }
+
+    public function getAllRequestNames(){
+        return Request::with('document')
+        ->get()
+        ->map(function ($request){
+            return[
+                'id'=>$request->id,
+                'name'=> $request->document->name ?? 'غير معرف'
+            ];
+        });
     }
 
 }

@@ -9,6 +9,8 @@ use App\Services\RequestHandlers\SubmittedRequestHandler;
 use App\Services\RequestHandlers\SpecialRequestHandler;
 use App\Services\RequestHandlers\GraduationNoticeHandler;
 use App\Services\RequestHandlers\UniversityLifeHandler;
+use App\Services\RequestHandlers\PracticalObjectionRequestHandler;
+use App\Services\RequestHandlers\TheoriticalObjectionRequestHandler;
 
 class RequestHandlerFactory
 {

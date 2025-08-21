@@ -131,9 +131,33 @@ class RequestService
        }
         else{
         $message="you can not do this";
-        return ['request'=>null,'message'=>$message];
+        return ['requestLogs'=>null,'message'=>$message];
     }
 
+        }
+
+        public function getNameForRequest($request_id){
+            if ( Auth::user()->hasRole('admin')) {
+            $requestName = $this->requestRepository->getNameForRequest($request_id);
+                if(is_null($requestName)){
+                     $message="request not found";
+                return ['requestName'=>null,'message'=>$message];
+                }
+               $message="requestName indexed successfully";
+              return ['requestName'=>$requestName,'message'=>$message];
+       }
+        else{
+        $message="you can not do this";
+        return ['requestName'=>null,'message'=>$message];
+    }
+        }
+
+        public function getAllRequestNames(){
+            if ( Auth::user()->hasRole('admin')) {
+            return $this->requestRepository->getAllRequestNames();
+        }
+        else{
+            return null;
         }
     }
         
@@ -143,5 +167,5 @@ class RequestService
 
 
 
-
+}
 

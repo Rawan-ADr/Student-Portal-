@@ -144,7 +144,8 @@ Route::prefix('prof')->group(function () {
     
 });
 Route::prefix('request')->group(function () {
-    Route::get('indexContent/{request_id}',[RequestController::class,'indexContent']); 
+    Route::get('indexContent/{request_id}',[RequestController::class,'indexContent']);
+    Route::get('getNameForRequest/{request_id?}',[RequestController::class,'getNameForRequest']); 
     
 });
 

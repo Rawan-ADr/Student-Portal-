@@ -74,4 +74,24 @@ class RequestController extends Controller
 
      }
     }
+
+    public function  getNameForRequest($request_id = null){
+        $data=[];
+     try{
+        if($request_id){
+        $data= $this->requestService->getNameForRequest($request_id);
+         return Response::Success($data['requestName'],$data['message']) ;
+        }
+        else{
+        $data= $this->requestService->getAllRequestNames();
+         return Response::Success($data,"تم استرجاع جميع الطلبات بنجاح") ;
+        }
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+    }
 }
