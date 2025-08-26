@@ -58,5 +58,10 @@ class Student   extends Authenticatable
        return $this->belongsToMany(Group::class, 'group_enrollments');
     }
 
+    public function devices()
+    {
+      return $this->morphMany(UserDevice::class, 'deviceable');
+    }
+
 
 }

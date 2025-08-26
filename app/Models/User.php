@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Announcement::class);
     }
+
+    public function devices()
+    {
+        return $this->morphMany(UserDevice::class, 'deviceable');
+    }
 }

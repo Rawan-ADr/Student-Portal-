@@ -22,14 +22,16 @@ class ScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'type' => 'required|in:Theoretical,Parctical',
+            'year_id'     => 'required|exists:years,id',
             'semester_id' => 'required|exists:semesters,id',
-            'year_id' => 'required|exists:years,id',
-            'course_id' => 'required|exists:courses,id',
-            'day_id' => 'required|exists:days,id',
-            'doctor_name' => 'nullable|string|max:255'
+            'day_id'      => 'required|exists:days,id',
+            'schedules'   => 'required|array|min:1',
+            'schedules.*.start_time' => 'required|date_format:H:i',
+            'schedules.*.end_time'   => 'required|date_format:H:i|after:schedules.*.start_time',
+            'schedules.*.type'       => 'required|in:نظري,عملي',
+            'schedules.*.doctor_name'=> 'nullable|string|max:255',
+            'schedules.*.specialization' => 'nullable|in:برمجيات,ذكا صنعي,شبكات',
+            'schedules.*.course_id'  => 'required|exists:courses,id',
         ];
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->enum('type',['نظري','عملي']);
             $table->string('doctor_name')->nullable();
+            $table->enum('specialization',['برمجيات','ذكا صنعي','شبكات'])->nullable();
             $table->foreignId('semester_id')->constrained('semesters')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('year_id')->constrained('years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete()->cascadeOnUpdate();

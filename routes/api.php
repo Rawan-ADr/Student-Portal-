@@ -13,6 +13,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DeviceController;
 use App\Models\Request as DocumentRequest;
 use Illuminate\Http\Request as HttpRequest;
 
@@ -54,6 +55,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('assignRole/toUser', [UserController::class, 'assignRole']);
     Route::get('index/users', [UserController::class, 'indexUsers']);
     Route::get('index/user/by/token', [UserController::class, 'indexUserByToken']);
+    Route::post('/device-token', [DeviceController::class, 'saveToken']);
    
 Route::prefix('admin')->group(function () {
     Route::get('show/logs',[RequestController::class,'indexLogs']); 
@@ -100,6 +102,7 @@ Route::prefix('student')->group(function () {
     Route::get('getModRequest/{id}',[StudentController::class,'getModRequest']);
     Route::get('getRequests/{id}',[StudentController::class,'getRequests']);
     Route::get('getRequest/{id}',[StudentController::class,'getRequest']);
+    Route::get('getRequestResult/{request_id}',[StudentController::class,'getRequestResult']);
     Route::get('getDocument/{id}',[StudentController::class,'getDocument']);
     Route::post('sendRequest/{document_id}',[StudentController::class,'sendRequest']);
     Route::post('updateRequest/{request_id}',[StudentController::class,'updateRequest']);

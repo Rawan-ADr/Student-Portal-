@@ -16,7 +16,8 @@ class Schedule extends Model
         'semester_id',
         'year_id',
         'course_id',
-        'day_id'
+        'day_id',
+        'specialization'
       
     ];
 

@@ -17,5 +17,6 @@ interface RequestRepositoryInterface{
     public function indexLogs();
     public function getNameForRequest($id);
     public function getAllRequestNames();
+    public function getRequestResult($request_id);
 
 }

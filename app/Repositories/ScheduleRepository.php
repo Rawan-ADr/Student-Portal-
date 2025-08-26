@@ -8,45 +8,64 @@
 
 
     public function add($request){
-          $conflict = Schedule::where('day_id', $request['day_id'])
-          ->where('year_id', $request['year_id'])
-          ->where('semester_id', $request['semester_id'])
-          ->where(function($query) use ($request) {
-              $query->where(function($q) use ($request) {
-                  $q->where('start_time', '<', $request['end_time'])
-                    ->where('end_time', '>', $request['start_time']);
-              });
-          })
-          ->exists();
+          $created = [];
 
-            if ($conflict) {
-                return null;
-      }
-        $schedule = Schedule::create([
-            'start_time' => $request['start_time'],
-            'end_time' => $request['end_time'],
-            'type' => $request['type'],
-            'semester_id' => $request['semester_id'],
-            'year_id' => $request['year_id'],
-            'course_id' => $request['course_id'],
-            'day_id' => $request['day_id'],
-            'doctor_name'=>$request['doctor_name']?? null
+    $year_id = $request['year_id'];
+    $semester_id = $request['semester_id'];
+    $day_id = $request['day_id'];
+
+    foreach ($request['schedules'] as $sched) {
+        $conflict = Schedule::where('day_id', $day_id)
+    ->where('year_id', $year_id)
+    ->where('semester_id', $semester_id)
+    ->where(function($query) use ($sched) {
+        // إذا الاختصاص موجود، نتحقق منه، وإذا null نتحقق من null
+        if(isset($sched['specialization']) && $sched['specialization'] !== null) {
+            $query->where('specialization', $sched['specialization']);
+        } else {
+            $query->whereNull('specialization');
+        }
+    })
+    ->where(function($query) use ($sched) {
+        $query->where(function($q) use ($sched) {
+            $q->where('start_time', '<', $sched['end_time'])
+              ->where('end_time', '>', $sched['start_time']);
+        });
+    })
+    ->exists();
+
+        if ($conflict) {
+            return null;
+        }
+
+        $created[] = Schedule::create([
+            'start_time' => $sched['start_time'],
+            'end_time' => $sched['end_time'],
+            'type' => $sched['type'],
+            'semester_id' => $semester_id,
+            'year_id' => $year_id,
+            'course_id' => $sched['course_id'],
+            'day_id' => $day_id,
+            'doctor_name' => $sched['doctor_name'] ?? null,
+            'specialization' => isset($sched['specialization']) ? trim($sched['specialization']) : null
         ]);
-        return $schedule;
+    }
+
+    return $created;
 
     }
 
     public function get($request){
 
-        $schedules = Schedule::with(['course', 'day'])
+         $schedules = Schedule::with(['course', 'day'])
         ->where('year_id', $request['year_id'])
         ->where('semester_id', $request['semester_id'])
-        ->orderBy('day_id')
-        ->orderBy('start_time')
-        ->get()
-        ->groupBy('day.name');
+        ->orderBy('specialization') // ترتيب حسب الاختصاص أولًا
+        ->orderBy('day_id')         // ثم ترتيب حسب اليوم
+        ->orderBy('start_time')     // ثم ترتيب حسب الوقت
+        ->get();
 
-        return $schedules;
+    return $schedules;
     }
 
   }

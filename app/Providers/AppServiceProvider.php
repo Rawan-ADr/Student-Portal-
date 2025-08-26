@@ -39,6 +39,8 @@ use App\Repositories\CourseRecordRepositoryInterface;
 use App\Repositories\CourseRecordRepository;
 use App\Repositories\ReportRepositoryInterface;
 use App\Repositories\ReportRepository;
+use App\Repositories\UserDeviceRepositoryInterface;
+use App\Repositories\UserDeviceRepository;
 
 use App\Models\Request;
 use App\Observers\RequestObserver;
@@ -70,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(MarkRepositoryInterface::class, MarkRepository::class);
         $this->app->bind(CourseRecordRepositoryInterface::class, CourseRecordRepository::class);
         $this->app->bind(ReportRepositoryInterface::class, ReportRepository::class);
+        $this->app->bind(UserDeviceRepositoryInterface::class, UserDeviceRepository::class);
 
     }
 

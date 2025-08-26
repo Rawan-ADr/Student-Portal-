@@ -102,6 +102,20 @@ class RequestRepository implements RequestRepositoryInterface
 
     }
 
+    public function getRequestResult($request_id){
+          $request = Request::with(['fieldValues.field'])->find($request_id);
+
+         if (!$request) {
+             return null;
+         }
+
+         if ($request->status !== 'done' && $request->status !=='rejected') {
+             return null;
+         }
+
+       return $request;
+    }
+
         public function indexContent($id){
          $request = Request::where('id', $id)->select('id', 'content_value')->first();
         return $request;

@@ -8,19 +8,25 @@ class RequestResource extends JsonResource
 {
     public function toArray($request)
     {
-        return [
+         return [
             'id' => $this->id,
             'date' => $this->date,
             'status' => $this->status,
             'point' => $this->point,
             'modifications' => $this->modifications,
 
-            'fields' => $this->fieldValues->map(function ($fieldValue) {
-                return [
-                    'field_name' => $fieldValue->field->name,
-                    'value' => $fieldValue->value
-                ];
-            }),
+            'fields' => $this->fieldValues
+                ->filter(function($fieldValue) {
+                    // نحتفظ فقط بالحقول التي processing_by = 'student'
+                    return $fieldValue->field->processing_by === 'student';
+                })
+                ->map(function ($fieldValue) {
+                    return [
+                        'field_name' => $fieldValue->field->name,
+                        'field_type' => $fieldValue->field->fieldType->type,
+                        'value' => $fieldValue->value
+                    ];
+                }),
 
             'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
                 return [

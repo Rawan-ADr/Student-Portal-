@@ -15,6 +15,7 @@ use App\Repositories\LectureRepositoryInterface;
 use App\Repositories\ScheduleRepositoryInterface;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\RequestResource;
+use App\Http\Resources\RequestResultResource;
 use App\Http\Resources\AllReqResource;
 use Illuminate\Support\Facades\DB;
                      
@@ -301,6 +302,29 @@ class StudentService{
     }
 
 
+    public function getRequestResult($request_id){
+
+        $request=$this->requestRepository->getRequestResult($request_id);
+        if(!is_null($request))
+        {
+
+
+            $message="request get successfully";
+            $code=200;
+        }
+
+        else
+        {
+            $message=" request not found or not completed ";
+            $code=404;
+            return ['requestResult'=>$request,'message'=>$message,'code'=>$code];
+    
+        }
+        
+        return ['requestResult'=>new RequestResultResource($request),'message'=>$message,'code'=>$code];
+    }
+
+
     public function getLecture($request)
     {
         $lectures=$this->lectureRepository->get($request);
@@ -545,36 +569,47 @@ class StudentService{
     
     public function getSchedule($request){
         $request->validate([
-            'year_id' => 'required|exists:years,id',
-            'semester_id' => 'required|exists:semesters,id',
-        ]);
-        $schedule=$this->scheduleRepository->get($request);
-        if($schedule->isEmpty()){
-            $Schedule=null;
-            $message="schedule not found";
-            $code=404;
-        }
-        else{
-           $Schedule=$schedule->map(function ($lectures, $dayName) {
+        'year_id' => 'required|exists:years,id',
+        'semester_id' => 'required|exists:semesters,id',
+    ]);
+
+    $schedules = $this->scheduleRepository->get($request);
+
+    if($schedules->isEmpty()){
+        $Schedule = null;
+        $message = "Schedule not found";
+        $code = 404;
+    } else {
+        $Schedule = $schedules->groupBy(function($lecture){
+            // إذا الاختصاص null، نضعه تحت "بدون اختصاص"
+            return $lecture->specialization ?? 'بدون اختصاص';
+        })->map(function($specGroup, $specName){
             return [
-                'day' => $dayName,
-                'lectures' => $lectures->map(function ($lecture) {
+                'specialization' => $specName,
+                'days' => $specGroup->groupBy(function($lecture){
+                    return $lecture->day->name;
+                })->map(function($dayLectures, $dayName){
                     return [
-                        'course_name' => $lecture->course->name,
-                        'start_time' => $lecture->start_time,
-                        'end_time' => $lecture->end_time,
-                        'type' => $lecture->type,
-                        'doctor_name'=>$lecture->doctor_name 
+                        'day' => $dayName,
+                        'lectures' => $dayLectures->map(function($lecture){
+                            return [
+                                'course_name' => $lecture->course->name,
+                                'start_time' => $lecture->start_time,
+                                'end_time' => $lecture->end_time,
+                                'type' => $lecture->type,
+                                'doctor_name' => $lecture->doctor_name
+                            ];
+                        })->values()
                     ];
                 })->values()
             ];
         })->values();
 
-        $message="Schedule get successfully";
-        $code=200;
-        } 
+        $message = "Schedule get successfully";
+        $code = 200;
+    }
 
-        return ['Schedule'=>$Schedule,'message'=>$message,'code'=>$code];
+    return ['Schedule' => $Schedule, 'message' => $message, 'code' => $code];
 
     }
 

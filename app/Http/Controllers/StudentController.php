@@ -160,6 +160,21 @@ class StudentController extends Controller
 
     }
 
+    public function getRequestResult($request_id){
+        $data=[];
+     try{
+         $data=$this->studentService->getRequestResult($request_id);
+         return Response::Success($data['requestResult'],$data['message'],$data['code']) ;
+     }
+
+     catch (Throwable $th){
+         $message=$th->getmessage();
+         return Response::Error($data,$message);
+
+     }
+
+    }
+
     public function getDocument($id)
     {
 
