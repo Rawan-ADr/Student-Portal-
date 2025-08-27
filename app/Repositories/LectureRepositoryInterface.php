@@ -15,5 +15,6 @@ use App\Models\Lecture;
     public function deleteAnnouncement($id);
     public function updateAnnouncement($request,$id);
     public function getAnnouncement();
+    public function getAnnouncementById($id);
 
 }

@@ -115,6 +115,7 @@ Route::prefix('student')->group(function () {
     Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
     Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
     Route::get('getAnnouncementByUserId',[StudentController::class,'getAnnouncementByUserId']);
+    Route::get('getAnnouncement/{id}',[StudentController::class,'getAnnouncementById']);
     
     
 
@@ -122,7 +123,7 @@ Route::prefix('student')->group(function () {
 
 Route::prefix('exam')->group(function () {
     Route::post('importMarks',[ExaminationController::class,'importMarks'])
-   ;
+   ->middleware('permission:import marks');
     Route::get('getRequests',[ExaminationController::class,'getExamRequests'])
     ->middleware('permission:view requests');
     Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests'])
@@ -141,6 +142,7 @@ Route::prefix('else')->group(function () {
      ->middleware('permission:update announcement');
     Route::get('deleteAnnouncement/{id}',[StudentController::class,'deleteAnnouncement'])
      ->middleware('permission:delete announcement');
+     
 });
 Route::prefix('prof')->group(function () {
     Route::post('add/result/practical/exam/objection',[RequestController::class,'updatePracticalMark']); 
@@ -177,7 +179,7 @@ Route::prefix('Affairs')->group(function () {
 
 Route::prefix('Review')->group(function () {
     Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview'])
-   ;
+   ->middleware('permission:confirm requests');
     Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest'])
     ->middleware('permission:reject requests');
     Route::post('requestModification/{id}',[ReviewController::class,'requestModification'])

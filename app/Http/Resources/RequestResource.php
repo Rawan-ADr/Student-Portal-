@@ -24,6 +24,7 @@ class RequestResource extends JsonResource
                 })
                 ->map(function ($fieldValue) {
                     return [
+                        'id'=>$fieldValue->field->id,
                         'name' => $fieldValue->field->name,
                         'type' => $fieldValue->field->fieldType->type,
                         'value' => $fieldValue->value,
@@ -33,6 +34,7 @@ class RequestResource extends JsonResource
 
             'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
                 return [
+                    'id' => $attachmentValue->attachment->id,
                     'name' => $attachmentValue->attachment->name,
                     'file_url' => url('storage/' . $attachmentValue->value)
                 ];

@@ -189,6 +189,15 @@ use Illuminate\Support\Facades\Auth;
         return $Announcements;
     }
 
+    public function getAnnouncementById($id){
+         $announcement = Announcement::findOrFail($id);
+
+    // إضافة رابط الملف
+    $announcement->file_url = url('storage/' . $announcement->value);
+
+    return $announcement;
+    }
+
      public function professorTeachesCourse($professorId, $courseId): bool
     {
         // هل الأستاذ مرتبط بمقرر ما من خلال مجموعة؟

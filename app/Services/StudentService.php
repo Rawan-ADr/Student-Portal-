@@ -550,6 +550,22 @@ class StudentService{
 
     }
 
+     public function getAnnouncementById($id){
+        $Announcement=$this->lectureRepository->getAnnouncementById($id);
+        if(!$Announcement->isEmpty()){
+            $message=" Announcement indexed successfully";
+            $code=200;   
+        }
+
+        else {
+            $Announcement=null;
+            $message="not found";
+            $code=404;
+        }
+
+        return ['Announcement'=>$Announcement,'message'=>$message,'code'=>$code];
+     }
+
     public function addSchedule($request){
         $Schedule=$this->scheduleRepository->add($request);
         if(!$Schedule){
