@@ -10,6 +10,8 @@ class RequestResource extends JsonResource
     {
          return [
             'id' => $this->id,
+            'docment_id'=>$this->document->id,
+            'name'=>$this->document->name,
             'date' => $this->date,
             'status' => $this->status,
             'point' => $this->point,
@@ -24,13 +26,14 @@ class RequestResource extends JsonResource
                     return [
                         'name' => $fieldValue->field->name,
                         'type' => $fieldValue->field->fieldType->type,
-                        'value' => $fieldValue->value
+                        'value' => $fieldValue->value,
+                         'validations' => $fieldValue->field->validation->pluck('validation_rule')->toArray(),
                     ];
                 }),
 
             'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
                 return [
-                    'attachment_name' => $attachmentValue->attachment->name,
+                    'name' => $attachmentValue->attachment->name,
                     'file_url' => url('storage/' . $attachmentValue->value)
                 ];
             })

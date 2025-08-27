@@ -26,7 +26,7 @@ class RequestResultResource extends JsonResource
 
             'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
                 return [
-                    'attachment_name' => $attachmentValue->attachment->name,
+                    'name' => $attachmentValue->attachment->name,
                     'file_url' => url('storage/' . $attachmentValue->value)
                 ];
             })
