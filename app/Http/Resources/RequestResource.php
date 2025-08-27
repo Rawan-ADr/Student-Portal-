@@ -22,8 +22,8 @@ class RequestResource extends JsonResource
                 })
                 ->map(function ($fieldValue) {
                     return [
-                        'field_name' => $fieldValue->field->name,
-                        'field_type' => $fieldValue->field->fieldType->type,
+                        'name' => $fieldValue->field->name,
+                        'type' => $fieldValue->field->fieldType->type,
                         'value' => $fieldValue->value
                     ];
                 }),

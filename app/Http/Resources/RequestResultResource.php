@@ -18,18 +18,18 @@ class RequestResultResource extends JsonResource
             'fields' => $this->fieldValues
                 ->map(function ($fieldValue) {
                     return [
-                        'field_name' => $fieldValue->field->name,
-                        'field_type' => $fieldValue->field->fieldType->type,
+                        'name' => $fieldValue->field->name,
+                        'type' => $fieldValue->field->fieldType->type,
                         'value' => $fieldValue->value
                     ];
                 }),
 
-           // 'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
-              //  return [
-               ///     'attachment_name' => $attachmentValue->attachment->name,
-                 //   'file_url' => url('storage/' . $attachmentValue->value)
-              //  ];
-         //   })
+            'attachments' => $this->attachmentValues->map(function ($attachmentValue) {
+                return [
+                    'attachment_name' => $attachmentValue->attachment->name,
+                    'file_url' => url('storage/' . $attachmentValue->value)
+                ];
+            })
         ];
     }
 }
