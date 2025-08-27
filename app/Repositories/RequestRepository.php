@@ -23,7 +23,8 @@ class RequestRepository implements RequestRepositoryInterface
 
     }
     public function getRequests($id){
-        return Request::where('student_id', $id)->where('status','!=', 'done')->Latest()
+        return Request::where('student_id', $id)->where('status','!=', 'done')
+        ->where('status','!=', 'required modification')->Latest()
         ->get()->makeHidden(['content_value']);
 
     }
@@ -90,9 +91,15 @@ class RequestRepository implements RequestRepositoryInterface
         if(!$request){
             return null; 
         }
-        $Request = Request::with(['fieldValues.field', 'attachmentValues.attachment'])->find($id);
-
-
+    $Request = Request::with([
+                'fieldValues' => function ($query) {
+                    $query->whereHas('field', function ($q) {
+                        $q->where('processing_by', 'student');
+                    })
+                    ->with('field'); 
+                },
+                'attachmentValues.attachment' 
+            ])->find($id);
     
         if (!$Request) {
             return null;
@@ -264,7 +271,7 @@ class RequestRepository implements RequestRepositoryInterface
     public function checkDocumentConditions($documentId, $studentId, $requestDate = null) {
             $requestDate = $requestDate ?? Carbon::today();
 
-            // جلب الشروط المرتبطة بالوثيقة
+            
             $conditions = DB::table('document__conditions')
                 ->join('conditions', 'document__conditions.condition_id', '=', 'conditions.id')
                 ->where('document__conditions.document_id', $documentId)
@@ -275,7 +282,7 @@ class RequestRepository implements RequestRepositoryInterface
                 // تحويل المتغيرات من JSON إلى مصفوفة PHP
                 $variables = json_decode($condition->variables, true);
 
-                // جمع القيم المطلوبة لتنفيذ تعليمة SQL
+                
                 $values = [];
                 foreach ($variables as $var) {
                     switch ($var) {

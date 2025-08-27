@@ -39,6 +39,11 @@ class Course extends Model
     {
         return $this->hasMany(Group::class);
     }
+
+public function latestRecord()
+{
+    return $this->hasOne(CourseRecord::class)->latestOfMany();
+}
 }
 
 

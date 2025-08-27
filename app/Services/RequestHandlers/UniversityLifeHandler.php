@@ -226,7 +226,7 @@ class UniversityLifeHandler implements RequestHandlerInterface
 
 
     protected function calculateUsedAndRemainingYears($studentId)
-{
+    {
     $studentRecords = StudentRecord::with('notes')
         ->where('student_id', $studentId)
         ->get();
