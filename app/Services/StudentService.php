@@ -552,7 +552,7 @@ class StudentService{
 
      public function getAnnouncementById($id){
         $Announcement=$this->lectureRepository->getAnnouncementById($id);
-        if(!$Announcement->isEmpty()){
+        if($Announcement !== null){
             $message=" Announcement indexed successfully";
             $code=200;   
         }

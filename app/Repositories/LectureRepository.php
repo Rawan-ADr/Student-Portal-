@@ -190,12 +190,17 @@ use Illuminate\Support\Facades\Auth;
     }
 
     public function getAnnouncementById($id){
-         $announcement = Announcement::findOrFail($id);
+         $announcement = Announcement::find($id);
 
+         if(!$announcement ){
+             return null;
+         }
+        else{
     // إضافة رابط الملف
     $announcement->file_url = url('storage/' . $announcement->value);
 
     return $announcement;
+        }
     }
 
      public function professorTeachesCourse($professorId, $courseId): bool

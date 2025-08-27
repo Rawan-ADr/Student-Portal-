@@ -44,6 +44,7 @@ Route::get('/payment/cancel', function () {
 });
 
 Route::post('/payment/confirm', [PaymentController::class, 'confirm']);
+Route::get('getAnnouncement/{id}',[StudentController::class,'getAnnouncementById']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -115,7 +116,7 @@ Route::prefix('student')->group(function () {
     Route::get('getStudentCourses',[ExaminationController::class,'getStudentCourses']);
     Route::get('getStudentMark/{id}',[ExaminationController::class,'getStudentMark']);
     Route::get('getAnnouncementByUserId',[StudentController::class,'getAnnouncementByUserId']);
-    Route::get('getAnnouncement/{id}',[StudentController::class,'getAnnouncementById']);
+    
     
     
 
