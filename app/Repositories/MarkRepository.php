@@ -114,7 +114,7 @@ function checkPromotionStatus($studentId)
             $studentFile->status = "متخرج";
         }
     }
-    else{
+    elseif($currentSemester->id==2){
         $studentFile->year_id = $studentFile->year_id;
         $studentFile->semester_id = $currentSemester->id;
         $studentFile->academic_year = Carbon::now()->year;
