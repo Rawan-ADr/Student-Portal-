@@ -17,6 +17,7 @@ use App\Models\Mark;
 use App\Models\Attachment;
 use App\Models\AttchmentValue;
 use App\Models\Document_Attachment;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 use Mpdf\Mpdf;
 
@@ -105,8 +106,19 @@ class TranscriptRequestHandler implements RequestHandlerInterface
         $mpdf->WriteHTML($html);
 
         // مسار حفظ الملف
-        $pdfPath = storage_path("app/public/transcript_{$request->id}.pdf");
-        $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);
+                
+                $fileName = "transcript_{$request->id}.pdf";
+
+                // المسار الفعلي على السيرفر (للحفظ)
+                $pdfPath = storage_path("app/public/{$fileName}");
+
+                // توليد الـ PDF وتخزينه فعلياً
+                $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);
+
+                // نخزن فقط المسار النسبي (مناسب للعرض عبر Storage::url)
+                $relativePath = "transcripts/{$fileName}";
+                
+   Storage::disk('public')->put("transcripts/{$fileName}", file_get_contents($pdfPath));
 
     // // 4. حفظه في مجلد مؤقت
     // $fileName = 'transcript_' . $studentId . '.pdf';
@@ -123,11 +135,11 @@ class TranscriptRequestHandler implements RequestHandlerInterface
 
     $Attachment->save();
 
-            AttchmentValue::create([
-                                'request_id' => $request->id,
-                                'attachment_id' => $Attachment->id,
-                                'value' => $pdfPath,
-                            ]);
+           AttchmentValue::create([
+                    'request_id'    => $request->id,
+                    'attachment_id' => $Attachment->id,
+                    'value'         => $relativePath, // النسبي مو المطلق
+                ]);
 
                             
             // Document_Attachment::create([

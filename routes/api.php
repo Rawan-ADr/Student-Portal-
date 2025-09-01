@@ -124,7 +124,7 @@ Route::prefix('student')->group(function () {
 
 Route::prefix('exam')->group(function () {
     Route::post('importMarks',[ExaminationController::class,'importMarks'])
-   ->middleware('permission:import marks');
+   ;
     Route::get('getRequests',[ExaminationController::class,'getExamRequests'])
     ->middleware('permission:view requests');
     Route::get('passingRequests/{id}',[ExaminationController::class,'passingRequests'])
@@ -180,7 +180,7 @@ Route::prefix('Affairs')->group(function () {
 
 Route::prefix('Review')->group(function () {
     Route::get('confirmReview/{id}',[ReviewController::class,'confirmReview'])
-   ->middleware('permission:confirm requests');
+   ;
     Route::get('rejecteRequest/{id}',[ReviewController::class,'rejecteRequest'])
     ->middleware('permission:reject requests');
     Route::post('requestModification/{id}',[ReviewController::class,'requestModification'])
